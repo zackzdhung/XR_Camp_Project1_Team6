@@ -6,8 +6,8 @@ using UnityEngine.EventSystems;
 public class InputHandler : MonoBehaviour
 {
     private OVRCameraRig mCameraRig;
-    private bool buttonOneInput = OVRInput.Get(OVRInput.Button.One);
-    private bool buttonTwoInput = OVRInput.Get(OVRInput.Button.Two);
+    private bool buttonOneInput = OVRInput.GetDown(OVRInput.Button.One);
+    private bool buttonTwoInput = OVRInput.GetDown(OVRInput.Button.Two);
 
     public DialogueTrigger dialogueTrigger;
     public DialogueManager dialogueManager;
@@ -18,8 +18,8 @@ public class InputHandler : MonoBehaviour
 
     void Update()
     {
-        buttonOneInput = OVRInput.Get(OVRInput.Button.One);
-        buttonTwoInput = OVRInput.Get(OVRInput.Button.Two);
+        buttonOneInput = OVRInput.GetDown(OVRInput.Button.One);
+        buttonTwoInput = OVRInput.GetDown(OVRInput.Button.Two);
 
         if (buttonOneInput)
         {

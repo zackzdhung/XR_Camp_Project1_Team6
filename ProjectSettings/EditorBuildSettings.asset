@@ -8,8 +8,8 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/Main Scene.unity
     guid: 888c307e6f446714f82e84abe019b07f
-  - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
+  - enabled: 0
+    path: Assets/Scenes/Backup.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
   - enabled: 0
     path: Assets/Oculus/SampleFramework/Usage/Passthrough.unity
@@ -17,6 +17,9 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Oculus/VR/Scenes/TrackedKeyboard.unity
     guid: eb540761693b1de438733a3581e21f58
+  - enabled: 1
+    path: Assets/Scenes/MainScene.unity
+    guid: b0e9f73bf8254d04a9b8e7aa9b80f54f
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: f20851549ee3caf4d880b3b95a24175a,
       type: 2}

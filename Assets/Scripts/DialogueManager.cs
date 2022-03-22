@@ -9,10 +9,12 @@ public class DialogueManager : MonoBehaviour
 
     public TextMesh nameText;
     public TextMesh dialogueText;
+    private RaySelector raySelector;
     
     void Start()
     {
         sentences = new Queue<string>();
+        raySelector = FindObjectOfType<RaySelector>();
     }
 
     void Update()
@@ -50,6 +52,8 @@ public class DialogueManager : MonoBehaviour
 
     private void EndDialogue()
     {
+        
         Debug.Log("End of conversation");
+        raySelector.endDialogue = true;
     }
 }

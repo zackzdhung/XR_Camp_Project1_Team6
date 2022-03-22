@@ -13,6 +13,8 @@ public class RaySelector : MonoBehaviour
     private float triggerInput = OVRInput.Get(OVRInput.Axis1D.SecondaryIndexTrigger);
 
     private bool targetHit = false;
+    public bool isChanged;
+    public bool endDialogue;
 
     public GameObject target;
 
@@ -22,10 +24,12 @@ public class RaySelector : MonoBehaviour
     void Start()
     {
         var position = transform.position;
-        Vector3[] startLinePositions = new Vector3[2] {position, position};
+        Vector3[] startLinePositions = {position, position};
         laser.SetPositions(startLinePositions);
         laser.enabled = false;
         InfoPanel.SetActive(false);
+        isChanged = false;
+        endDialogue = true;
     }
 
     // Update is called once per frame
@@ -64,14 +68,17 @@ public class RaySelector : MonoBehaviour
         }
         
         target = hit.collider.gameObject;
-        if (target != cur)
-        {
-            curCooldown = 0.0f;
-            cur.GetComponent<Interactable>().selected = false;
-        }
+        
         
         if (target.CompareTag("InteractableObject"))
         {
+            if (target != cur && endDialogue)
+            {
+                endDialogue = false;
+                isChanged = true;
+                curCooldown = 0.0f;
+                cur.GetComponent<Interactable>().selected = false;
+            }
             InfoPanel.SetActive(true);
             targetHit = true;
             endPosition = hit.point;
