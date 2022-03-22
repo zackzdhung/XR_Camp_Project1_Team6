@@ -8,11 +8,9 @@ public class RaySelector : MonoBehaviour
 
     public float lineMaxLength = 10f;
 
-    public bool toggled = false;
+    public bool toggled;
     
-    private float triggerInput = OVRInput.Get(OVRInput.Axis1D.SecondaryIndexTrigger);
-
-    private bool targetHit = false;
+    private bool targetHit;
     public bool isChanged;
     public bool endDialogue;
 
@@ -32,12 +30,9 @@ public class RaySelector : MonoBehaviour
         endDialogue = true;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        triggerInput = OVRInput.Get(OVRInput.Axis1D.SecondaryIndexTrigger);
-
-        toggled = triggerInput > 0.9f;
+        toggled = OVRInput.Get(OVRInput.Axis1D.SecondaryIndexTrigger) > 0.9f;
         laser.enabled = toggled;
         if (!toggled)
         {

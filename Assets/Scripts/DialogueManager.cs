@@ -10,7 +10,10 @@ public class DialogueManager : MonoBehaviour
     public TextMesh nameText;
     public TextMesh dialogueText;
     private RaySelector raySelector;
-    
+
+    public Animator dialogueAnim;
+    private static readonly int IsOpen = Animator.StringToHash("IsOpen");
+
     void Start()
     {
         sentences = new Queue<string>();
@@ -25,6 +28,7 @@ public class DialogueManager : MonoBehaviour
     public void StartDialogue(Dialogue dialogue)
     {
         // Debug.Log("start conversation with " + dialogue.name);
+        dialogueAnim.SetBool(IsOpen, true);
         nameText.text = dialogue.name;
 
         sentences.Clear();
@@ -52,7 +56,7 @@ public class DialogueManager : MonoBehaviour
 
     private void EndDialogue()
     {
-        
+        dialogueAnim.SetBool(IsOpen, false);
         Debug.Log("End of conversation");
         raySelector.endDialogue = true;
     }

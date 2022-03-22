@@ -7,21 +7,36 @@ public class GameFlowController : MonoBehaviour
     private enum Level
     {
         Room,
-        Street,
         Restaurant
     }
 
+    private int curEvent;
+
+    public Event[] events;
+
     private Level currentLevel;
-    private bool isLevelChanged;
+    private bool isEvenChanged;
+    
 
     void Start()
     {
         currentLevel = Level.Room;
-        isLevelChanged = false;
+        isEvenChanged = true;
+        curEvent = 0;
     }
 
     void Update()
     {
-        
+        if (isEvenChanged)
+        {
+            events[curEvent].StartEvent();
+            isEvenChanged = false;
+        }
+    }
+
+    public void StartNextEvent()
+    {
+        curEvent++;
+        isEvenChanged = true;
     }
 }
