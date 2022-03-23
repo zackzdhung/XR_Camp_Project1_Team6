@@ -5,15 +5,18 @@ using UnityEngine;
 public class AudioManager : MonoBehaviour
 {
     public AudioClip[] vocals;
-    private int curVocal;
+    private int curIndex;
     private AudioSource audioSource;
-    
+    public AudioClip audioClipGameOver;
+
+    // private GameFlowController GameFlowControllerController;
+
     void Start()
     {
-        curVocal = 0;
+        curIndex = 0;
+        // gameFlowController = FindObjectOfType<GameFlowController>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         
@@ -22,5 +25,17 @@ public class AudioManager : MonoBehaviour
     void Speak()
     {
         
+    }
+
+    public void PlayGameOver()
+    {
+        audioSource.clip = audioClipGameOver;
+        audioSource.Play();
+    }
+
+    IEnumerator PlaySoundClip()
+    {
+        
+        yield return new WaitUntil(() => audioSource.isPlaying == false);
     }
 }

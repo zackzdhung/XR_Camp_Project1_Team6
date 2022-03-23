@@ -17,7 +17,7 @@ public class Event : MonoBehaviour
     {
         if (isOption)
         {
-            
+            // TODO
         }
         else
         {
@@ -34,7 +34,7 @@ public class Event : MonoBehaviour
     {
         if (isOption)
         {
-            
+            // TODO
         }
         else
         {

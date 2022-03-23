@@ -11,7 +11,8 @@ public class GameFlowController : MonoBehaviour
         Restaurant
     }
 
-    private int curEvent;
+    public int curEvent { private set; get; }
+    // private int curEvent;
     
     public Event[] events;
 

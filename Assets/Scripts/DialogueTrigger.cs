@@ -6,30 +6,30 @@ using UnityEngine;
 public class DialogueTrigger : MonoBehaviour
 {
     private AudioSource audioSource;
-    public AudioClip audioClip;
+    public AudioClip[] audioClips;
     public bool hasSoundEffect;
     
     public Dialogue[] dialogue;
     private DialogueManager dialogueManager;
-    private int currentDialogue;
+    private int curIndex;
 
 
     private void Start()
     {
         dialogueManager = FindObjectOfType<DialogueManager>();
-        currentDialogue = 0;
+        curIndex = 0;
         if (hasSoundEffect)
         {
             audioSource = gameObject.GetComponent<AudioSource>();
-            audioSource.clip = audioClip;
+            audioSource.clip = audioClips[curIndex];
         }
     }
 
     public void TriggerDialogue()
     {
-        dialogueManager.StartDialogue(dialogue[currentDialogue]);
+        dialogueManager.StartDialogue(dialogue[curIndex]);
         audioSource.Play();
-        currentDialogue++;
-        currentDialogue = Math.Min(dialogue.Length-1, currentDialogue);
+        curIndex++;
+        curIndex = Math.Min(dialogue.Length-1, curIndex);
     }
 }
