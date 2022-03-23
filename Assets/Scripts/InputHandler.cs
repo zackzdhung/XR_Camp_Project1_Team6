@@ -11,27 +11,23 @@ public class InputHandler : MonoBehaviour
 
     public DialogueTrigger dialogueTrigger;
     public DialogueManager dialogueManager;
+
+    private GameFlowController gameFlowController;
     void Start()
     {
         mCameraRig = FindObjectOfType<OVRCameraRig>();
+        gameFlowController = FindObjectOfType<GameFlowController>();
     }
 
-    void Update()
-    {
-        buttonOneInput = OVRInput.GetDown(OVRInput.Button.One);
-        buttonTwoInput = OVRInput.GetDown(OVRInput.Button.Two);
-
-        if (buttonOneInput)
-        {
-            dialogueTrigger.TriggerDialogue();
-        }
-
-        if (buttonTwoInput)
-        {
-            dialogueManager.DisplayNextSentence();
-        }
-        
-    }
+    // void Update()
+    // {
+    //     if (OVRInput.GetDown(OVRInput.Button.Two))
+    //     {
+    //         gameFlowController.curEvent -= 2;
+    //         gameFlowController.StartNextEvent(0);
+    //         
+    //     }
+    // }
 
 
 }

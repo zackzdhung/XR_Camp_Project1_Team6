@@ -16,7 +16,7 @@ public class DialogueManager : MonoBehaviour
 
     public Animator dialogueAnim;
     private static readonly int IsOpen = Animator.StringToHash("IsOpen");
-    private Player player;
+    private PlayerInput playerInput;
     private GameObject dialoguePanel;
     
     void Start()
@@ -24,7 +24,7 @@ public class DialogueManager : MonoBehaviour
         sentences = new Queue<string>();
         // raySelector = FindObjectOfType<RaySelector>();
         isInConversation = false;
-        player = FindObjectOfType<Player>();
+        playerInput = FindObjectOfType<PlayerInput>();
         dialoguePanel = GameObject.FindWithTag("DialoguePanel");
     }
 
@@ -78,7 +78,7 @@ public class DialogueManager : MonoBehaviour
         dialogueAnim.SetBool(IsOpen, false);
         dialoguePanel.SetActive(false);
         
-        player.MakeChoice();
+        playerInput.MakeChoice();
     }
 
     // IEnumerator CloseDialoguePanel()

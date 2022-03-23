@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
 
 public class GameFlowController : MonoBehaviour
 {
@@ -13,11 +12,11 @@ public class GameFlowController : MonoBehaviour
     }
 
     private int curEvent;
-
+    
     public Event[] events;
 
     // private Level currentLevel;
-    private bool isEventChanged;
+    // private bool isEventChanged;
 
     private DialogueManager dialogueManager;
     
@@ -25,47 +24,49 @@ public class GameFlowController : MonoBehaviour
     void Start()
     {
         // currentLevel = Level.Room;
-        isEventChanged = true;
+        // isEventChanged = true;
         curEvent = 0;
         dialogueManager = FindObjectOfType<DialogueManager>();
-    }
-
-    void Update()
-    {
-        if (dialogueManager.isInConversation)
-        {
-            GetPlayerInput();
-        }
-        if (!isEventChanged) return;
-        // next event
         events[curEvent].StartEvent();
-        isEventChanged = false;
-        
     }
 
-    private void GetPlayerInput()
-    {
-        if (OVRInput.GetDown(OVRInput.Button.One))
-        {
-            dialogueManager.DisplayNextSentence();
-        }
-        // TODO   
-        // if (OVRInput.GetDown(OVRInput.Button.Two))
-        // {
-        //    
-        // }
-    }
+    // void Update()
+    // {
+    //     // if (dialogueManager.isInConversation)
+    //     // {
+    //     //     GetPlayerInput();
+    //     // }
+    //     // if (!isEventChanged) return;
+    //     // // next event
+    //     //
+    //     // Debug.Log("start event idx = " + curEvent);
+    //     // events[curEvent].StartEvent();
+    //     // isEventChanged = false;
+    //     
+    // }
 
+    // private void GetPlayerInput()
+    // {
+    //     if (OVRInput.GetDown(OVRInput.Button.One))
+    //     {
+    //         dialogueManager.DisplayNextSentence();
+    //     }
+    // }
+
+    
+    // private void StartNextEvent(int choice)
     private void StartNextEvent(int choice)
     {
         if (events[curEvent].isDead[choice])
         {
-            GameOver();
+            Debug.Log("GameOver!");
+            // GameOver();
         }
         else
         {
             curEvent++;
-            isEventChanged = true;    
+            // isEventChanged = true;
+            events[curEvent].StartEvent();
         }
     }
 
