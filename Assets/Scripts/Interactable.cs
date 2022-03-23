@@ -13,17 +13,28 @@ public class Interactable : MonoBehaviour
     private GameObject dialoguePanel;
     public Vector3 dialoguePanelPosition;
     public Vector3 dialoguePanelRotation;
+    public bool hasSoundEffect;
+
+    private AudioSource audioSource;
+    public AudioClip audioClip;
 
     void Start()
     {
         dialoguePanel = GameObject.FindWithTag("DialoguePanel");
         selected = false;
+        if (hasSoundEffect)
+        {
+            audioSource = gameObject.GetComponent<AudioSource>();
+            audioSource.clip = audioClip;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
         if (!selected) return;
+        if (hasSoundEffect) audioSource.Play();
+        
         dialoguePanel.transform.position = dialoguePanelPosition;
         // var position = transform.position;
         // var dir = (position - centerEyeAnchor.transform.position).normalized;

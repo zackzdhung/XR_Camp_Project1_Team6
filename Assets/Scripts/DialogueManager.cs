@@ -30,7 +30,6 @@ public class DialogueManager : MonoBehaviour
 
     public void StartDialogue(Dialogue dialogue)
     {
-        // Debug.Log("start conversation with " + dialogue.name);
         isInConversation = true;
         dialoguePanel.SetActive(true);
         dialogueAnim.SetBool(IsOpen, true);
@@ -74,6 +73,8 @@ public class DialogueManager : MonoBehaviour
     {
         isInConversation = false;
         // StartCoroutine(CloseDialoguePanel());
+        // TODO
+        // set inactive after animation finished
         dialogueAnim.SetBool(IsOpen, false);
         dialoguePanel.SetActive(false);
         
