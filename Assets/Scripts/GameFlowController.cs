@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 
 public class GameFlowController : MonoBehaviour
 {
@@ -14,29 +16,68 @@ public class GameFlowController : MonoBehaviour
 
     public Event[] events;
 
-    private Level currentLevel;
-    private bool isEvenChanged;
+    // private Level currentLevel;
+    private bool isEventChanged;
+
+    private DialogueManager dialogueManager;
     
 
     void Start()
     {
-        currentLevel = Level.Room;
-        isEvenChanged = true;
+        // currentLevel = Level.Room;
+        isEventChanged = true;
         curEvent = 0;
+        dialogueManager = FindObjectOfType<DialogueManager>();
     }
 
     void Update()
     {
-        if (isEvenChanged)
+        if (dialogueManager.isInConversation)
         {
-            events[curEvent].StartEvent();
-            isEvenChanged = false;
+            GetPlayerInput();
+        }
+        if (!isEventChanged) return;
+        // next event
+        events[curEvent].StartEvent();
+        isEventChanged = false;
+        
+    }
+
+    private void GetPlayerInput()
+    {
+        if (OVRInput.GetDown(OVRInput.Button.One))
+        {
+            dialogueManager.DisplayNextSentence();
+        }
+        // TODO   
+        // if (OVRInput.GetDown(OVRInput.Button.Two))
+        // {
+        //    
+        // }
+    }
+
+    private void StartNextEvent(int choice)
+    {
+        if (events[curEvent].isDead[choice])
+        {
+            GameOver();
+        }
+        else
+        {
+            curEvent++;
+            isEventChanged = true;    
         }
     }
 
-    public void StartNextEvent()
+    private void GameOver()
     {
-        curEvent++;
-        isEvenChanged = true;
+        // TODO
+    }
+
+    public void MakeChoice(GameObject g)
+    {
+        var choice = g == events[curEvent].choices[0] ? 0 : 1;
+        events[curEvent].EndEvent();
+        StartNextEvent(choice);
     }
 }

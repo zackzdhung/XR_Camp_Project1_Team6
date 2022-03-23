@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,25 +11,28 @@ public class DialogueManager : MonoBehaviour
 
     public TextMesh nameText;
     public TextMesh dialogueText;
-    private RaySelector raySelector;
+    // private RaySelector raySelector;
+    public bool isInConversation;
 
     public Animator dialogueAnim;
     private static readonly int IsOpen = Animator.StringToHash("IsOpen");
-
+    private Player player;
+    private GameObject dialoguePanel;
+    
     void Start()
     {
         sentences = new Queue<string>();
-        raySelector = FindObjectOfType<RaySelector>();
-    }
-
-    void Update()
-    {
-
+        // raySelector = FindObjectOfType<RaySelector>();
+        isInConversation = false;
+        player = FindObjectOfType<Player>();
+        dialoguePanel = GameObject.FindWithTag("DialoguePanel");
     }
 
     public void StartDialogue(Dialogue dialogue)
     {
         // Debug.Log("start conversation with " + dialogue.name);
+        isInConversation = true;
+        dialoguePanel.SetActive(true);
         dialogueAnim.SetBool(IsOpen, true);
         nameText.text = dialogue.name;
 
@@ -49,15 +54,40 @@ public class DialogueManager : MonoBehaviour
         }
 
         var sentence = sentences.Dequeue();
-        dialogueText.text = sentence;
-        
-        // for ()
+
+        StopAllCoroutines();
+        StartCoroutine(TypeSentence(sentence));
     }
+
+    IEnumerator TypeSentence(String sentence)
+    {
+        dialogueText.text = "";
+        foreach (var letter in sentence.ToCharArray())
+        {
+            dialogueText.text += letter;
+            yield return null;
+        }
+    }
+    
 
     private void EndDialogue()
     {
+        isInConversation = false;
+        // StartCoroutine(CloseDialoguePanel());
         dialogueAnim.SetBool(IsOpen, false);
-        Debug.Log("End of conversation");
-        raySelector.endDialogue = true;
+        dialoguePanel.SetActive(false);
+        
+        player.MakeChoice();
     }
+
+    // IEnumerator CloseDialoguePanel()
+    // {
+    //     dialogueAnim.SetBool(IsOpen, false);
+    //     while (dialogueAnim.IsInTransition(0) || dialogueAnim.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f)
+    //     {
+    //         yield return null;
+    //     }
+    //     dialoguePanel.SetActive(false);
+    // }
+    
 }
