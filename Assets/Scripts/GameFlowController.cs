@@ -97,17 +97,24 @@ public class GameFlowController : MonoBehaviour
         // anim.SetBool(IsGameOver, true);
         anim.SetTrigger(IsGameOverTrigger);
         while (!anim.GetCurrentAnimatorStateInfo(0).IsName("GameOver"))
+        // while (anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 1)
+        // while (anim.GetCurrentAnimatorStateInfo(0).length > anim.GetCurrentAnimatorStateInfo(0).normalizedTime)
         {
             yield return null;
         }
+        // yield return new WaitForSeconds(3);
 
         anim.SetTrigger(PlayTrigger);
         
         while (!anim.GetCurrentAnimatorStateInfo(0).IsName("Play"))
+        // while (anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 1)
+        // while (anim.GetCurrentAnimatorStateInfo(0).length > anim.GetCurrentAnimatorStateInfo(0).normalizedTime)
+
         {
             yield return null;
         }
-        
+        // yield return new WaitForSeconds(2);
+
         if (needTeleport)
         {
             cameraRigGameObject.transform.position = nextScenePosition;
@@ -134,7 +141,7 @@ public class GameFlowController : MonoBehaviour
     {
         var choice = g == events[curEvent].choices[0] ? 0 : 1;
         events[curEvent].EndEvent(choice);
-        
+        Debug.Log("choice idx = " + choice);
     }
 
     public bool IsOptional()

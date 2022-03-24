@@ -15,6 +15,8 @@ public class PlayerInput : MonoBehaviour
 
     public AudioSource audioSource;
     public AudioClip buttonSound;
+
+    private AudioManager audioManager;
     
     void Start()
     {
@@ -22,6 +24,7 @@ public class PlayerInput : MonoBehaviour
         dialogueManager = FindObjectOfType<DialogueManager>();
         gameFlowController = FindObjectOfType<GameFlowController>();
         hasNewChoice = true;
+        audioManager = FindObjectOfType<AudioManager>();
     }
 
     void Update()
@@ -44,6 +47,17 @@ public class PlayerInput : MonoBehaviour
         //     gameFlowController.curEvent = 3;
         //     gameFlowController.StartNextEvent(0);
         // }
+        
+        // TODO fix
+        if (OVRInput.GetDown(OVRInput.Button.Two))
+        {
+            audioManager.PlaySoundEffect(2);
+        }
+
+        if (OVRInput.GetDown(OVRInput.Button.Three))
+        {
+            audioManager.PlaySoundEffect(3);
+        }
     }
 
     private void GetChoiceInput()
@@ -73,7 +87,11 @@ public class PlayerInput : MonoBehaviour
         if (!hasNewChoice) return;
         raySelector.target.GetComponent<Interactable>().selected = true;
         raySelector.target.GetComponent<Interactable>().SetUpPanel();
-        raySelector.target.GetComponent<DialogueTrigger>().TriggerDialogue();
+        if (raySelector.target.GetComponent<DialogueTrigger>() != null)
+        {
+            raySelector.target.GetComponent<DialogueTrigger>().TriggerDialogue();
+
+        }
     }
 
     public void MakeChoice()
