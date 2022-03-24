@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
+using Outline = XR_1.OutlineEffect.OutlineEffect.Outline;
 
 public class Event : MonoBehaviour
 {
@@ -35,6 +37,12 @@ public class Event : MonoBehaviour
             {
                 // choice.tag = "InteractableObject";
                 choice.GetComponent<BoxCollider>().enabled = true;
+
+                foreach (var effect in choice.GetComponentsInChildren<Outline>())
+                {
+                    effect.enabled = true;
+                }
+               
             }
         }
        
@@ -52,6 +60,10 @@ public class Event : MonoBehaviour
             {
                 // choice.tag = "Untagged";
                 choice.GetComponent<BoxCollider>().enabled = false;
+                foreach (var effect in choice.GetComponentsInChildren<Outline>())
+                {
+                    effect.enabled = true;
+                }
             }
         }
         

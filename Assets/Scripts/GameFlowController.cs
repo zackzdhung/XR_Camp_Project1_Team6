@@ -130,6 +130,5 @@ public class GameFlowController : MonoBehaviour
     {
         var choice = g == events[curEvent].choices[0] ? 0 : 1;
         events[curEvent].EndEvent(choice);
-        
     }
 }
