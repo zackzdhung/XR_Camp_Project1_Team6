@@ -90,7 +90,6 @@ public class GameFlowController : MonoBehaviour
 
     private IEnumerator StartTransition(IEnumerable<int> soundEffectIndices, bool needTeleport = false)
     {
-        // anim.SetBool(IsGameOver, true);
         anim.SetTrigger(IsGameOverTrigger);
         while (!anim.GetCurrentAnimatorStateInfo(0).IsName("GameOver"))
         {
@@ -118,6 +117,7 @@ public class GameFlowController : MonoBehaviour
                 yield return null;
             } while (audioManager.IsPlaying());
         }
+        
     }
 
     private void GameOver()
