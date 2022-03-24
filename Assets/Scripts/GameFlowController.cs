@@ -139,6 +139,6 @@ public class GameFlowController : MonoBehaviour
 
     public bool IsOptional()
     {
-        return GetComponent<Event>().isOption;
+        return events[curEvent].isOption;
     }
 }
