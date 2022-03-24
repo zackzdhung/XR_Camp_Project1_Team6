@@ -23,10 +23,8 @@
 */
 
 using UnityEngine;
-using System.Linq;
-using System.Collections.Generic;
 
-namespace cakeslice
+namespace XR_1.OutlineEffect.OutlineEffect
 {
 	[RequireComponent(typeof(Renderer))]
 	/* [ExecuteInEditMode] */
@@ -54,27 +52,27 @@ namespace cakeslice
 
 		void OnEnable()
 		{
-			OutlineEffect.Instance?.AddOutline(this);
+			cakeslice.OutlineEffect.Instance?.AddOutline(this);
 		}
 
 		void OnDisable()
 		{
-			OutlineEffect.Instance?.RemoveOutline(this);
+			cakeslice.OutlineEffect.Instance?.RemoveOutline(this);
 		}
 
         // Update is called once per frame
         void Update()
         {
-            if(OutlineEffect.Instance == null) return;
+            if(cakeslice.OutlineEffect.Instance == null) return;
 			
 			if(stage != 0) {
-				OutlineEffect.Instance?.RemoveOutline(this);
+				cakeslice.OutlineEffect.Instance?.RemoveOutline(this);
 			}else{
-				OutlineEffect.Instance?.AddOutline(this);
+				cakeslice.OutlineEffect.Instance?.AddOutline(this);
 			}
 
 
-            Color c = OutlineEffect.Instance.GetColorFromID(color);
+            Color c = cakeslice.OutlineEffect.Instance.GetColorFromID(color);
 			if(!anim) 
 			// else if(!anim) 
 			{
@@ -97,8 +95,8 @@ namespace cakeslice
             }
 
             c.a = Mathf.Clamp01(c.a);
-            OutlineEffect.Instance.SetColorFromID(c, color);
-            OutlineEffect.Instance.UpdateMaterialsPublicProperties();
+            cakeslice.OutlineEffect.Instance.SetColorFromID(c, color);
+            cakeslice.OutlineEffect.Instance.UpdateMaterialsPublicProperties();
         }
 
 		private Material[] _SharedMaterials;

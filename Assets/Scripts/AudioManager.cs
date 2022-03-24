@@ -1,19 +1,24 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem.UI;
 
 public class AudioManager : MonoBehaviour
 {
     public AudioClip[] vocals;
-    private int curIndex;
+    public AudioClip[] soundEffects;
+    // private int curVocal;
+    // private int curSoundEffect;
     private AudioSource audioSource;
     public AudioClip audioClipGameOver;
-
+    
     // private GameFlowController GameFlowControllerController;
 
     void Start()
     {
-        curIndex = 0;
+        // curVocal = 0;
+        // curSoundEffect = 1;
+        audioSource = gameObject.GetComponent<AudioSource>();
         // gameFlowController = FindObjectOfType<GameFlowController>();
     }
 
@@ -22,20 +27,40 @@ public class AudioManager : MonoBehaviour
         
     }
 
-    void Speak()
+    public void PlayVocal(int idx)
     {
-        
+        PlaySoundClip(vocals[idx]);
+        // curVocal++;
     }
 
+    public void PlaySoundEffect(int idx)
+    {
+        PlaySoundClip(soundEffects[idx]);
+        // curSoundEffect++;
+    }
+
+    private void PlaySoundClip(AudioClip audioClip)
+    {
+        audioSource.clip = audioClip;
+        audioSource.Play();
+        // StartCoroutine(PlaySoundClipRoutine(audioClip));
+    }
     public void PlayGameOver()
     {
         audioSource.clip = audioClipGameOver;
         audioSource.Play();
     }
 
-    IEnumerator PlaySoundClip()
+    IEnumerator PlaySoundClipRoutine(AudioClip audioClip)
     {
-        
-        yield return new WaitUntil(() => audioSource.isPlaying == false);
+        audioSource.clip = audioClip;
+        audioSource.Play();
+        yield return new WaitForSeconds(audioClip.length);
     }
+
+    public bool IsPlaying()
+    {
+        return audioSource.isPlaying;
+    }
+    
 }

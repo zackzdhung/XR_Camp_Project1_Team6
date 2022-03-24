@@ -26,6 +26,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.Rendering;
 using UnityEngine.VR;
+using XR_1.OutlineEffect.OutlineEffect;
 
 namespace cakeslice
 {

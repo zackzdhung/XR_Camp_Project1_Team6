@@ -22,7 +22,6 @@ public class PlayerInput : MonoBehaviour
         dialogueManager = FindObjectOfType<DialogueManager>();
         gameFlowController = FindObjectOfType<GameFlowController>();
         hasNewChoice = true;
-        audioSource.clip = buttonSound;
     }
 
     void Update()
@@ -36,14 +35,19 @@ public class PlayerInput : MonoBehaviour
         {
             GetTriggerInput();
         }
-        // buttonTwoInput = OVRInput.GetDown(OVRInput.Button.Two);  
+
+        if (OVRInput.GetDown(OVRInput.Button.Two))
+        {
+            gameFlowController.curEvent = 3;
+            gameFlowController.StartNextEvent(0);
+        }
     }
 
     private void GetButtonInput()
     {
         if (OVRInput.GetDown(OVRInput.Button.One))
         {
-            audioSource.Play();
+            audioSource.PlayOneShot(buttonSound);
             dialogueManager.DisplayNextSentence();
         }
     }
@@ -51,8 +55,6 @@ public class PlayerInput : MonoBehaviour
     private void GetTriggerInput()
     {
         if (raySelector.target == null|| !raySelector.target.CompareTag("InteractableObject")) return;
-        // if (!raySelector.isChanged) return;
-        // raySelector.isChanged = false;
         if (!hasNewChoice) return;
         raySelector.target.GetComponent<Interactable>().selected = true;
         raySelector.target.GetComponent<DialogueTrigger>().TriggerDialogue();

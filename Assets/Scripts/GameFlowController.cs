@@ -5,81 +5,131 @@ using UnityEngine;
 
 public class GameFlowController : MonoBehaviour
 {
-    private enum Level
-    {
-        Room,
-        Restaurant
-    }
-
-    public int curEvent { private set; get; }
+    public int curEvent { set; get; }
     // private int curEvent;
     
     public Event[] events;
-
-    // private Level currentLevel;
-    // private bool isEventChanged;
-
-    private DialogueManager dialogueManager;
+    private int eventCount;
     
+    private DialogueManager dialogueManager;
+
+    public Animator anim;
+    private static readonly int IsGameOver = Animator.StringToHash("IsGameOver");
+
+    private AudioManager audioManager;
+
+    public GameObject gameOverText;
+    private static readonly int IsGameOverTrigger = Animator.StringToHash("IsGameOverTrigger");
+    private static readonly int PlayTrigger = Animator.StringToHash("PlayTrigger");
+
+    public GameObject cameraRigGameObject;
+    
+    public Vector3 nextScenePosition;
+    public Vector3 nextSceneRotation;
 
     void Start()
     {
-        // currentLevel = Level.Room;
-        // isEventChanged = true;
         curEvent = 0;
         dialogueManager = FindObjectOfType<DialogueManager>();
+        anim.SetBool(IsGameOver, false);
         events[curEvent].StartEvent();
+        eventCount = 9;
+        audioManager = FindObjectOfType<AudioManager>();
+        gameOverText.SetActive(false);
     }
 
-    // void Update()
-    // {
-    //     // if (dialogueManager.isInConversation)
-    //     // {
-    //     //     GetPlayerInput();
-    //     // }
-    //     // if (!isEventChanged) return;
-    //     // // next event
-    //     //
-    //     // Debug.Log("start event idx = " + curEvent);
-    //     // events[curEvent].StartEvent();
-    //     // isEventChanged = false;
-    //     
-    // }
-
-    // private void GetPlayerInput()
-    // {
-    //     if (OVRInput.GetDown(OVRInput.Button.One))
-    //     {
-    //         dialogueManager.DisplayNextSentence();
-    //     }
-    // }
-
-    
-    // private void StartNextEvent(int choice)
-    private void StartNextEvent(int choice)
+    public void StartNextEvent(int choice)
     {
         if (events[curEvent].isDead[choice])
         {
             Debug.Log("GameOver!");
-            // GameOver();
+            GameOver();
         }
         else
         {
+            StopAllCoroutines();
             curEvent++;
-            // isEventChanged = true;
+            curEvent = Math.Min(eventCount - 1, curEvent);
+            // TODO : transition condition
+            switch (curEvent)
+            {
+                case 0:
+                    break;
+                case 1:
+                    break;
+                case 2:
+                    StartCoroutine(StartTransition(new []{2, 3}));
+                    break;
+                case 3:
+                    break;
+                case 4:
+                    StartCoroutine(StartTransition(new []{7}, true));
+                    break;
+                case 5:
+                    break;
+                case 6:
+                    break;
+                case 7:
+                    break;
+                case 8:
+                    StartCoroutine(StartTransition(new[] {8}));
+                    break;
+            }
             events[curEvent].StartEvent();
+        }
+    }
+
+    // private IEnumerator WaitForPlayerInput(int soundEffectIndex, bool)
+    // {
+    //     audioManager.PlaySoundEffect(soundEffectIndex);
+    //     while (!OVRInput.GetDown(OVRInput.Button.One))
+    //     {
+    //         yield return null;
+    //     }
+    // }
+
+    private IEnumerator StartTransition(IEnumerable<int> soundEffectIndices, bool needTeleport = false)
+    {
+        // anim.SetBool(IsGameOver, true);
+        anim.SetTrigger(IsGameOverTrigger);
+        while (!anim.GetCurrentAnimatorStateInfo(0).IsName("GameOver"))
+        {
+            yield return null;
+        }
+
+        anim.SetTrigger(PlayTrigger);
+        
+        while (!anim.GetCurrentAnimatorStateInfo(0).IsName("Play"))
+        {
+            yield return null;
+        }
+        
+        if (needTeleport)
+        {
+            cameraRigGameObject.transform.position = nextScenePosition;
+            cameraRigGameObject.transform.rotation = Quaternion.Euler(nextSceneRotation);
+        }
+
+        foreach (var soundEffectIndex in soundEffectIndices)
+        {
+            audioManager.PlaySoundEffect(soundEffectIndex);
+            do
+            {
+                yield return null;
+            } while (audioManager.IsPlaying());
         }
     }
 
     private void GameOver()
     {
+        anim.SetTrigger(IsGameOverTrigger);
         // TODO
     }
 
     public void MakeChoice(GameObject g)
     {
         var choice = g == events[curEvent].choices[0] ? 0 : 1;
-        events[curEvent].EndEvent();
-        StartNextEvent(choice);
+        events[curEvent].EndEvent(choice);
+        
     }
 }

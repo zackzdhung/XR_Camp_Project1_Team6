@@ -6,9 +6,9 @@ using UnityEngine;
 public class DialogueTrigger : MonoBehaviour
 {
     private AudioSource audioSource;
-    public AudioClip[] audioClips;
+    public AudioClip audioClip;
     public bool hasSoundEffect;
-    
+
     public Dialogue[] dialogue;
     private DialogueManager dialogueManager;
     private int curIndex;
@@ -18,18 +18,22 @@ public class DialogueTrigger : MonoBehaviour
     {
         dialogueManager = FindObjectOfType<DialogueManager>();
         curIndex = 0;
-        if (hasSoundEffect)
-        {
-            audioSource = gameObject.GetComponent<AudioSource>();
-            audioSource.clip = audioClips[curIndex];
-        }
+        
+        if (!hasSoundEffect) return;
+        audioSource = gameObject.GetComponent<AudioSource>();
     }
 
     public void TriggerDialogue()
     {
         dialogueManager.StartDialogue(dialogue[curIndex]);
-        audioSource.Play();
+
+        if (hasSoundEffect)
+        {
+            audioSource.PlayOneShot(audioClip);
+            hasSoundEffect = false;
+        }
+
         curIndex++;
-        curIndex = Math.Min(dialogue.Length-1, curIndex);
+        curIndex = Math.Min(dialogue.Length - 1, curIndex);     
     }
 }

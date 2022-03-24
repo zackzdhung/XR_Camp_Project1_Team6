@@ -11,7 +11,6 @@ public class DialogueManager : MonoBehaviour
 
     public TextMesh nameText;
     public TextMesh dialogueText;
-    // private RaySelector raySelector;
     public bool isInConversation;
 
     public Animator dialogueAnim;
@@ -19,13 +18,19 @@ public class DialogueManager : MonoBehaviour
     private PlayerInput playerInput;
     private GameObject dialoguePanel;
     
+    private AudioManager audioManager;
+
+    private bool isComputerSetSecondEvent;
+    
     void Start()
     {
         sentences = new Queue<string>();
-        // raySelector = FindObjectOfType<RaySelector>();
         isInConversation = false;
         playerInput = FindObjectOfType<PlayerInput>();
         dialoguePanel = GameObject.FindWithTag("DialoguePanel");
+        dialoguePanel.SetActive(false);
+        audioManager = FindObjectOfType<AudioManager>();
+        isComputerSetSecondEvent = false;
     }
 
     public void StartDialogue(Dialogue dialogue)
@@ -34,6 +39,7 @@ public class DialogueManager : MonoBehaviour
         dialoguePanel.SetActive(true);
         dialogueAnim.SetBool(IsOpen, true);
         nameText.text = dialogue.name;
+        if (dialogue.name == "電腦") isComputerSetSecondEvent = true;
 
         sentences.Clear();
 
@@ -56,9 +62,14 @@ public class DialogueManager : MonoBehaviour
 
         StopAllCoroutines();
         StartCoroutine(TypeSentence(sentence));
+        
+        if (!isComputerSetSecondEvent || sentences.Count != 2) return;
+        isComputerSetSecondEvent = false;
+        audioManager.PlayVocal(2);
+        audioManager.PlaySoundEffect(1);
     }
 
-    IEnumerator TypeSentence(String sentence)
+    private IEnumerator TypeSentence(string sentence)
     {
         dialogueText.text = "";
         foreach (var letter in sentence.ToCharArray())

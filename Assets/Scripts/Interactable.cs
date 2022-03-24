@@ -24,11 +24,9 @@ public class Interactable : MonoBehaviour
     void Update()
     {
         if (!selected) return;
-        
+
+        if (dialoguePanel == null) return;
         dialoguePanel.transform.position = dialoguePanelPosition;
-        // var position = transform.position;
-        // var dir = (position - centerEyeAnchor.transform.position).normalized;
-        // dialoguePanel.transform.LookAt(position + dir);
         dialoguePanel.transform.rotation = Quaternion.Euler(dialoguePanelRotation);
     }
 }
