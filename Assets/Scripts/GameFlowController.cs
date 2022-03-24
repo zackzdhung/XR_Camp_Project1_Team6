@@ -66,15 +66,19 @@ public class GameFlowController : MonoBehaviour
                     StartCoroutine(StartTransition(new []{7}, true));
                     break;
                 case 5:
+                    audioManager.PlayVocal(15);
                     break;
                 case 6:
+                    audioManager.PlayVocal(17);
                     break;
                 case 7:
+                    audioManager.PlayVocal(18);
                     break;
                 case 8:
                     StartCoroutine(StartTransition(new[] {8}));
                     break;
             }
+            StopAllCoroutines();
             events[curEvent].StartEvent();
         }
     }
@@ -131,5 +135,10 @@ public class GameFlowController : MonoBehaviour
         var choice = g == events[curEvent].choices[0] ? 0 : 1;
         events[curEvent].EndEvent(choice);
         
+    }
+
+    public bool IsOptional()
+    {
+        return GetComponent<Event>().isOption;
     }
 }

@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class Event : MonoBehaviour
 {
@@ -23,11 +25,20 @@ public class Event : MonoBehaviour
 
     public GameFlowController gameFlowController;
 
+    public GameObject rj;
+
+    public GameObject choicePanel;
+    public TextMesh choiceA;
+    public TextMesh choiceB;
+
     public void StartEvent()
     {
         if (isOption)
         {
             // TODO
+            rj.GetComponent<DialogueTrigger>().TriggerDialogue();
+            choiceA.text = options[0];
+            choiceB.text = options[1];
         }
         else
         {
@@ -45,6 +56,8 @@ public class Event : MonoBehaviour
         if (isOption)
         {
             // TODO
+
+            choicePanel.SetActive(false);
         }
         else
         {
