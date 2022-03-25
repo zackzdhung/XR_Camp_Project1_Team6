@@ -47,10 +47,12 @@ public class Event : MonoBehaviour
             {
                 // choice.tag = "InteractableObject";
                 choice.GetComponent<BoxCollider>().enabled = true;
-                foreach (var outlineEffect in choice.GetComponentsInChildren<Outline>())
+
+                foreach (var effect in choice.GetComponentsInChildren<Outline>())
                 {
-                    outlineEffect.stage = 0;
+                    effect.enabled = true;
                 }
+               
             }
         }
        
@@ -61,7 +63,6 @@ public class Event : MonoBehaviour
         if (isOption)
         {
             // TODO
-
             choicePanel.SetActive(false);
         }
         else
@@ -70,9 +71,9 @@ public class Event : MonoBehaviour
             {
                 // choice.tag = "Untagged";
                 choice.GetComponent<BoxCollider>().enabled = false;
-                foreach (var outlineEffect in choice.GetComponentsInChildren<Outline>())
+                foreach (var effect in choice.GetComponentsInChildren<Outline>())
                 {
-                    outlineEffect.stage = 1;
+                    effect.enabled = true;
                 }
             }
         }
@@ -99,7 +100,6 @@ public class Event : MonoBehaviour
 
             while (audioManager.IsPlaying())
             {
-                // Debug.Log("IEnumerator PlayAudioSequentially Yield return null");
                 yield return null;
             }
         }

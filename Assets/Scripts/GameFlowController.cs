@@ -96,7 +96,6 @@ public class GameFlowController : MonoBehaviour
 
     private IEnumerator StartTransition(IEnumerable<int> soundEffectIndices, bool needTeleport = false)
     {
-        // anim.SetBool(IsGameOver, true);
         anim.SetTrigger(IsGameOverTrigger);
         while (!anim.GetNextAnimatorStateInfo(0).IsName("GameOver"))
         {
