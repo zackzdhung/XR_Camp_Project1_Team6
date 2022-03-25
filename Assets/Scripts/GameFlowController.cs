@@ -40,6 +40,7 @@ public class GameFlowController : MonoBehaviour
 
     public void StartNextEvent(int choice)
     {
+        Debug.Log("curEvent : " + curEvent);
         if (events[curEvent].isDead[choice])
         {
             Debug.Log("GameOver!");
@@ -47,10 +48,11 @@ public class GameFlowController : MonoBehaviour
         }
         else
         {
-            StopAllCoroutines();
+            // StopAllCoroutines();
             curEvent++;
-            curEvent = Math.Min(eventCount - 1, curEvent);
-            // TODO : transition condition
+            // TODO check event bound?
+            // curEvent = Math.Min(eventCount - 1, curEvent);
+            Debug.Log("Cur event after math min = " + curEvent);
             switch (curEvent)
             {
                 case 0:
@@ -75,6 +77,7 @@ public class GameFlowController : MonoBehaviour
                     StartCoroutine(StartTransition(new[] {8}));
                     break;
             }
+            Debug.Log("Start event" + curEvent);
             events[curEvent].StartEvent();
         }
     }
@@ -92,15 +95,17 @@ public class GameFlowController : MonoBehaviour
     {
         // anim.SetBool(IsGameOver, true);
         anim.SetTrigger(IsGameOverTrigger);
-        while (!anim.GetCurrentAnimatorStateInfo(0).IsName("GameOver"))
+        while (!anim.GetNextAnimatorStateInfo(0).IsName("GameOver"))
         {
+            // Debug.Log("IEnumerator StartTransition to state GameOver Yield return null");
             yield return null;
         }
 
         anim.SetTrigger(PlayTrigger);
         
-        while (!anim.GetCurrentAnimatorStateInfo(0).IsName("Play"))
+        while (!anim.GetNextAnimatorStateInfo(0).IsName("Play"))
         {
+            // Debug.Log("IEnumerator StartTransition to state Play Yield return null");
             yield return null;
         }
         
@@ -130,6 +135,6 @@ public class GameFlowController : MonoBehaviour
     {
         var choice = g == events[curEvent].choices[0] ? 0 : 1;
         events[curEvent].EndEvent(choice);
-        
+        Debug.Log("Make Choice " + choice);
     }
 }

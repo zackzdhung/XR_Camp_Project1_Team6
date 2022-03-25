@@ -15,6 +15,14 @@ public class PlayerInput : MonoBehaviour
 
     public AudioSource audioSource;
     public AudioClip buttonSound;
+
+    // keyboard testing
+    public GameObject computerSet;
+    public GameObject closet;
+    public GameObject phone;
+    public GameObject clock;
+    public GameObject couch;
+    public GameObject door;
     
     void Start()
     {
@@ -45,19 +53,65 @@ public class PlayerInput : MonoBehaviour
 
     private void GetButtonInput()
     {
-        if (OVRInput.GetDown(OVRInput.Button.One))
+        // if (OVRInput.GetDown(OVRInput.Button.One))
+        // {
+        //     audioSource.PlayOneShot(buttonSound);
+        //     dialogueManager.DisplayNextSentence();
+        // }
+        
+        // keyboard testing
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            audioSource.PlayOneShot(buttonSound);
             dialogueManager.DisplayNextSentence();
         }
     }
 
     private void GetTriggerInput()
     {
-        if (raySelector.target == null|| !raySelector.target.CompareTag("InteractableObject")) return;
-        if (!hasNewChoice) return;
-        raySelector.target.GetComponent<Interactable>().selected = true;
-        raySelector.target.GetComponent<DialogueTrigger>().TriggerDialogue();
+        // if (raySelector.target == null|| !raySelector.target.CompareTag("InteractableObject")) return;
+        // if (!hasNewChoice) return;
+        // raySelector.target.GetComponent<Interactable>().selected = true;
+        // raySelector.target.GetComponent<DialogueTrigger>().TriggerDialogue();
+
+        // keyboard testing
+        if (!Input.anyKeyDown) return;
+        Debug.Log("Get Player Keyboard Input");
+        if (Input.GetKeyDown(KeyCode.Keypad0))
+        {
+            raySelector.target = computerSet;
+            raySelector.target.GetComponent<Interactable>().selected = true;
+            raySelector.target.GetComponent<DialogueTrigger>().TriggerDialogue();
+        }
+        else if (Input.GetKeyDown(KeyCode.Keypad1))
+        {
+            raySelector.target = closet;
+            raySelector.target.GetComponent<Interactable>().selected = true;
+            raySelector.target.GetComponent<DialogueTrigger>().TriggerDialogue();
+        }
+        else if (Input.GetKeyDown(KeyCode.Keypad2))
+        {
+            raySelector.target = phone;
+            raySelector.target.GetComponent<Interactable>().selected = true;
+            raySelector.target.GetComponent<DialogueTrigger>().TriggerDialogue();
+        }
+        else if (Input.GetKeyDown(KeyCode.Keypad3))
+        {
+            raySelector.target = clock;
+            raySelector.target.GetComponent<Interactable>().selected = true;
+            raySelector.target.GetComponent<DialogueTrigger>().TriggerDialogue();
+        }
+        else if (Input.GetKeyDown(KeyCode.Keypad4))
+        {
+            raySelector.target = couch;
+            raySelector.target.GetComponent<Interactable>().selected = true;
+            raySelector.target.GetComponent<DialogueTrigger>().TriggerDialogue();
+        }
+        else if (Input.GetKeyDown(KeyCode.Keypad5))
+        {
+            raySelector.target = door;
+            raySelector.target.GetComponent<Interactable>().selected = true;
+            raySelector.target.GetComponent<DialogueTrigger>().TriggerDialogue();
+        }
     }
 
     public void MakeChoice()

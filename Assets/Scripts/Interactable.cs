@@ -20,12 +20,20 @@ public class Interactable : MonoBehaviour
         selected = false;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (!selected) return;
+    // void Update()
+    // {
+    //     if (!selected) return;
+    //
+    //     // if (dialoguePanel == null) return;
+    //     Debug.Log("try to move dialogue panel position!");
+    //     dialoguePanel.transform.position = dialoguePanelPosition;
+    //     dialoguePanel.transform.rotation = Quaternion.Euler(dialoguePanelRotation);
+    // }
 
-        if (dialoguePanel == null) return;
+    public void SetUpDialoguePanel()
+    {
+        Debug.Log("SetUpDialoguePanel");
+        dialoguePanel.SetActive(true);
         dialoguePanel.transform.position = dialoguePanelPosition;
         dialoguePanel.transform.rotation = Quaternion.Euler(dialoguePanelRotation);
     }

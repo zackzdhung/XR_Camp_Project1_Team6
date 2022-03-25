@@ -11,6 +11,7 @@ public class DialogueManager : MonoBehaviour
 
     public TextMesh nameText;
     public TextMesh dialogueText;
+    public TextMesh hintText;
     public bool isInConversation;
 
     public Animator dialogueAnim;
@@ -28,7 +29,7 @@ public class DialogueManager : MonoBehaviour
         isInConversation = false;
         playerInput = FindObjectOfType<PlayerInput>();
         dialoguePanel = GameObject.FindWithTag("DialoguePanel");
-        dialoguePanel.SetActive(false);
+        // dialoguePanel.SetActive(false);
         audioManager = FindObjectOfType<AudioManager>();
         isComputerSetSecondEvent = false;
     }
@@ -37,6 +38,9 @@ public class DialogueManager : MonoBehaviour
     {
         isInConversation = true;
         dialoguePanel.SetActive(true);
+        nameText.gameObject.SetActive(true);
+        hintText.gameObject.SetActive(true);
+        dialogueText.gameObject.SetActive(true);
         dialogueAnim.SetBool(IsOpen, true);
         nameText.text = dialogue.name;
         if (dialogue.name == "電腦") isComputerSetSecondEvent = true;
@@ -87,6 +91,7 @@ public class DialogueManager : MonoBehaviour
         // TODO
         // set inactive after animation finished
         dialogueAnim.SetBool(IsOpen, false);
+        // hintText.gameObject.SetActive(false);
         dialoguePanel.SetActive(false);
         
         playerInput.MakeChoice();

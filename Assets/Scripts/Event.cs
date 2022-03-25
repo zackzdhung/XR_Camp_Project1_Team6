@@ -77,6 +77,7 @@ public class Event : MonoBehaviour
 
             while (audioManager.IsPlaying())
             {
+                // Debug.Log("IEnumerator PlayAudioSequentially Yield return null");
                 yield return null;
             }
         }
