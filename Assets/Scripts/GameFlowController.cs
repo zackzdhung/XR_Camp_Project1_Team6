@@ -51,7 +51,7 @@ public class GameFlowController : MonoBehaviour
             // StopAllCoroutines();
             curEvent++;
             // TODO check event bound?
-            // curEvent = Math.Min(eventCount - 1, curEvent);
+            curEvent = Math.Min(eventCount - 1, curEvent);
             Debug.Log("Cur event after math min = " + curEvent);
             switch (curEvent)
             {
