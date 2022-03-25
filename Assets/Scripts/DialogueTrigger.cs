@@ -25,7 +25,8 @@ public class DialogueTrigger : MonoBehaviour
 
     public void TriggerDialogue()
     {
-        dialogueManager.StartDialogue(dialogue[curIndex], curIndex);
+        gameObject.GetComponent<Interactable>().SetUpDialoguePanel();
+        dialogueManager.StartDialogue(dialogue[curIndex]);
 
         if (hasSoundEffect)
         {

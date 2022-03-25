@@ -40,6 +40,7 @@ public class GameFlowController : MonoBehaviour
 
     public void StartNextEvent(int choice)
     {
+        Debug.Log("curEvent : " + curEvent);
         if (events[curEvent].isDead[choice])
         {
             Debug.Log("GameOver!");
@@ -47,10 +48,11 @@ public class GameFlowController : MonoBehaviour
         }
         else
         {
-            StopAllCoroutines();
+            // StopAllCoroutines();
             curEvent++;
+            // TODO check event bound?
             curEvent = Math.Min(eventCount - 1, curEvent);
-            // TODO : transition condition
+            Debug.Log("Cur event after math min = " + curEvent);
             switch (curEvent)
             {
                 case 0:
@@ -78,7 +80,7 @@ public class GameFlowController : MonoBehaviour
                     StartCoroutine(StartTransition(new[] {8}));
                     break;
             }
-            StopAllCoroutines();
+            Debug.Log("Start event" + curEvent);
             events[curEvent].StartEvent();
         }
     }
@@ -96,25 +98,20 @@ public class GameFlowController : MonoBehaviour
     {
         // anim.SetBool(IsGameOver, true);
         anim.SetTrigger(IsGameOverTrigger);
-        while (!anim.GetCurrentAnimatorStateInfo(0).IsName("GameOver"))
-        // while (anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 1)
-        // while (anim.GetCurrentAnimatorStateInfo(0).length > anim.GetCurrentAnimatorStateInfo(0).normalizedTime)
+        while (!anim.GetNextAnimatorStateInfo(0).IsName("GameOver"))
         {
+            // Debug.Log("IEnumerator StartTransition to state GameOver Yield return null");
             yield return null;
         }
-        // yield return new WaitForSeconds(3);
 
         anim.SetTrigger(PlayTrigger);
         
-        while (!anim.GetCurrentAnimatorStateInfo(0).IsName("Play"))
-        // while (anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 1)
-        // while (anim.GetCurrentAnimatorStateInfo(0).length > anim.GetCurrentAnimatorStateInfo(0).normalizedTime)
-
+        while (!anim.GetNextAnimatorStateInfo(0).IsName("Play"))
         {
+            // Debug.Log("IEnumerator StartTransition to state Play Yield return null");
             yield return null;
         }
-        // yield return new WaitForSeconds(2);
-
+        
         if (needTeleport)
         {
             cameraRigGameObject.transform.position = nextScenePosition;
@@ -141,11 +138,6 @@ public class GameFlowController : MonoBehaviour
     {
         var choice = g == events[curEvent].choices[0] ? 0 : 1;
         events[curEvent].EndEvent(choice);
-        Debug.Log("choice idx = " + choice);
-    }
-
-    public bool IsOptional()
-    {
-        return events[curEvent].isOption;
+        Debug.Log("Make Choice " + choice);
     }
 }
