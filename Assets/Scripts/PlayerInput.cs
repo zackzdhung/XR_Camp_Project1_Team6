@@ -51,11 +51,11 @@ public class PlayerInput : MonoBehaviour
             GetTriggerInput();
         }
 
-        if (OVRInput.GetDown(OVRInput.Button.Two))
-        {
-            gameFlowController.curEvent = 3;
-            gameFlowController.StartNextEvent(0);
-        }
+        // if (OVRInput.GetDown(OVRInput.Button.Two))
+        // {
+        //     gameFlowController.curEvent = 3;
+        //     gameFlowController.StartNextEvent(0);
+        // }
     }
 
     private void GetButtonInput()
@@ -71,7 +71,7 @@ public class PlayerInput : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             audioSource.PlayOneShot(buttonSound);
-            dialogueManager.DisplayNextSentence();
+            dialogueManager.DisplayNextSentence(false);
         }
     }
 
@@ -86,7 +86,12 @@ public class PlayerInput : MonoBehaviour
         // keyboard testing
         if (!Input.anyKeyDown) return;
         Debug.Log("Get Player Keyboard Input");
-        if (Input.GetKeyDown(KeyCode.Keypad0))
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            gameFlowController.curEvent = 3;
+            gameFlowController.StartNextEvent(0);
+        }
+        else if (Input.GetKeyDown(KeyCode.Keypad0))
         {
             raySelector.target = computerSet;
             raySelector.target.GetComponent<Interactable>().selected = true;

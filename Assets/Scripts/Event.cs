@@ -28,9 +28,9 @@ public class Event : MonoBehaviour
 
     public GameObject rj;
 
-    public GameObject choicePanel;
-    public TextMesh choiceA;
-    public TextMesh choiceB;
+    public GameObject optionPanel;
+    public TextMesh optionA;
+    public TextMesh optionB;
 
     public void StartEvent()
     {
@@ -38,8 +38,8 @@ public class Event : MonoBehaviour
         {
             // TODO
             rj.GetComponent<DialogueTrigger>().TriggerDialogue();
-            choiceA.text = options[0];
-            choiceB.text = options[1];
+            optionA.text = options[0];
+            optionB.text = options[1];
         }
         else
         {
@@ -50,7 +50,7 @@ public class Event : MonoBehaviour
 
                 foreach (var effect in choice.GetComponentsInChildren<Outline>())
                 {
-                    effect.enabled = true;
+                    effect.stage = 0;
                 }
                
             }
@@ -63,7 +63,7 @@ public class Event : MonoBehaviour
         if (isOption)
         {
             // TODO
-            choicePanel.SetActive(false);
+            optionPanel.SetActive(false);
         }
         else
         {
@@ -73,7 +73,7 @@ public class Event : MonoBehaviour
                 choice.GetComponent<BoxCollider>().enabled = false;
                 foreach (var effect in choice.GetComponentsInChildren<Outline>())
                 {
-                    effect.enabled = true;
+                    effect.stage = 1;
                 }
             }
         }
@@ -91,10 +91,12 @@ public class Event : MonoBehaviour
             // Debug.Log("isSoundEffect Length = " + cur.Length + " cur = " + isSoundEffect);
             if (info.IsSoundeffect)
             {
+                Debug.Log("Play Sound Effect idx: " + info.Idx);
                 audioManager.PlaySoundEffect(info.Idx);
             }
             else
             {
+                Debug.Log("Play Vocal idx: " + info.Idx);
                 audioManager.PlayVocal(info.Idx);
             }
 

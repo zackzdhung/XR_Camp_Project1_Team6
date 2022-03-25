@@ -6,7 +6,7 @@ TagManager:
   tags:
   - InteractableObject
   - DialoguePanel
-  - ChoicePanel
+  - OptionPanel
   layers:
   - Default
   - TransparentFX

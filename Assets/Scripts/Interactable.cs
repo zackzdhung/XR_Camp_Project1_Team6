@@ -8,27 +8,21 @@ using UnityEngine.UI;
 public class Interactable : MonoBehaviour
 {
     public bool selected;
-    public string title;
-    public string description;
+    // public string title;
+    // public string description;
     private GameObject dialoguePanel;
+    private GameObject optionPanel;
     public Vector3 dialoguePanelPosition;
     public Vector3 dialoguePanelRotation;
+    public Vector3 optionPanelPosition;
+    public Vector3 optionPanelRotation;
 
     void Start()
     {
         dialoguePanel = GameObject.FindWithTag("DialoguePanel");
+        optionPanel = GameObject.FindWithTag("OptionPanel");
         selected = false;
     }
-
-    // void Update()
-    // {
-    //     if (!selected) return;
-    //
-    //     // if (dialoguePanel == null) return;
-    //     Debug.Log("try to move dialogue panel position!");
-    //     dialoguePanel.transform.position = dialoguePanelPosition;
-    //     dialoguePanel.transform.rotation = Quaternion.Euler(dialoguePanelRotation);
-    // }
 
     public void SetUpDialoguePanel()
     {
@@ -36,5 +30,13 @@ public class Interactable : MonoBehaviour
         dialoguePanel.SetActive(true);
         dialoguePanel.transform.position = dialoguePanelPosition;
         dialoguePanel.transform.rotation = Quaternion.Euler(dialoguePanelRotation);
+    }
+
+    public void SetUpOptionPanel()
+    {
+        Debug.Log("SetUpOptionPanel");
+        optionPanel.SetActive(true);
+        // optionPanel.transform.position = optionPanelPosition;
+        // optionPanel.transform.rotation = Quaternion.Euler(optionPanelRotation);
     }
 }

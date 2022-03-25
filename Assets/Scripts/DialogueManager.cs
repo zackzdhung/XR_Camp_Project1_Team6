@@ -18,7 +18,13 @@ public class DialogueManager : MonoBehaviour
     private static readonly int IsOpen = Animator.StringToHash("IsOpen");
     private PlayerInput playerInput;
     private GameObject dialoguePanel;
-    
+    private GameObject optionPanel;
+
+    // public TextMesh choiceAText;
+    // public TextMesh choiceBText;
+    public TextMesh optionAText;
+    public TextMesh optionBText;
+
     private AudioManager audioManager;
 
     private bool isComputerSetSecondEvent;
@@ -34,43 +40,52 @@ public class DialogueManager : MonoBehaviour
         playerInput = FindObjectOfType<PlayerInput>();
         dialoguePanel = GameObject.FindWithTag("DialoguePanel");
         // dialoguePanel.SetActive(false);
+        optionPanel = GameObject.FindWithTag("OptionPanel");
         audioManager = FindObjectOfType<AudioManager>();
         isComputerSetSecondEvent = false;
         isRjFirstEvent = false;
         isRjThirdEvent = false;
     }
 
-    public void StartDialogue(Dialogue dialogue, int curIdx)
+    public void StartDialogue(Dialogue dialogue, int curIdx, bool isOption)
     {
         isInConversation = true;
-        dialoguePanel.SetActive(true);
-        nameText.gameObject.SetActive(true);
-        hintText.gameObject.SetActive(true);
-        dialogueText.gameObject.SetActive(true);
-        dialogueAnim.SetBool(IsOpen, true);
-        nameText.text = dialogue.name;
-        switch (dialogue.name)
+        if (isOption)
         {
-            case "電腦":
-                isComputerSetSecondEvent = true;
-                break;
-            case "阿傑":
-                switch (curIdx)
-                {
-                    case 0:
-                        isRjFirstEvent = true;
-                        break;
-                    case 2:
-                        isRjThirdEvent = true;
-                        break;
-                    case 4:
-                        isRjFifthEvent = true;
-                        break;
-                }
-
-                break;
+            optionPanel.SetActive(true);
+            optionAText.gameObject.SetActive(true);
+            optionBText.gameObject.SetActive(true);
         }
+        else
+        {
+            dialoguePanel.SetActive(true);
+            nameText.gameObject.SetActive(true);
+            hintText.gameObject.SetActive(true);
+            dialogueText.gameObject.SetActive(true);
+            dialogueAnim.SetBool(IsOpen, true);
+            nameText.text = dialogue.name;
+            switch (dialogue.name)
+            {
+                case "電腦":
+                    isComputerSetSecondEvent = true;
+                    break;
+                case "阿傑":
+                    switch (curIdx)
+                    {
+                        case 0:
+                            isRjFirstEvent = true;
+                            break;
+                        case 2:
+                            isRjThirdEvent = true;
+                            break;
+                        case 4:
+                            isRjFifthEvent = true;
+                            break;
+                    }
 
+                    break;
+            }
+        }
         sentences.Clear();
 
         foreach (var sentence in dialogue.sentences)
@@ -78,10 +93,18 @@ public class DialogueManager : MonoBehaviour
             sentences.Enqueue(sentence);
         }
 
-        DisplayNextSentence();
+        DisplayNextSentence(isOption);
     }
-    public void DisplayNextSentence()
+    public void DisplayNextSentence(bool isOption)
     {
+        if (isOption)
+        {
+            StopAllCoroutines();
+            StartCoroutine(TypeOptions(sentences));
+            return;
+        }
+        
+        // choice
         if (sentences.Count == 0)
         {
             EndDialogue();
@@ -125,13 +148,29 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
+    private IEnumerator TypeOptions(Queue<string> options)
+    {
+        optionAText.text = "";
+        foreach (var letter in sentences.Dequeue().ToCharArray())
+        {
+            optionAText.text += letter;
+            yield return null;
+        }
+        optionBText.text = "";
+        foreach (var letter in sentences.Dequeue().ToCharArray())
+        {
+            optionBText.text += letter;
+            yield return null;
+        }
+    }
+
     private IEnumerator TypeSentence(string sentence)
     {
         dialogueText.text = "";
         foreach (var letter in sentence.ToCharArray())
         {
             dialogueText.text += letter;
-            yield return null;
+            yield return new WaitForSeconds(0.1f);
         }
     }
     
