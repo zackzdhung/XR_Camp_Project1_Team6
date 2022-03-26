@@ -3,13 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.UI;
 using Debug = UnityEngine.Debug;
 
 public class GameFlowController : MonoBehaviour
 {
     public int curEvent { private set; get; }
-    // private int curEvent;
     
     public Event[] events;
     private int eventCount;
@@ -32,8 +32,11 @@ public class GameFlowController : MonoBehaviour
 
     public Image fadeImage;
 
+    public GameObject foods;
+
     void Start()
     {
+        curEvent = 0;
         curEvent = 0;
         dialogueManager = FindObjectOfType<DialogueManager>();
         anim.SetBool(IsGameOver, false);
@@ -41,21 +44,17 @@ public class GameFlowController : MonoBehaviour
         eventCount = 9;
         audioManager = FindObjectOfType<AudioManager>();
         gameOverText.SetActive(false);
+        audioManager.PlayBGM(0);
+        foods.SetActive(false);
     }
 
     public void StartNextEvent(int choice)
     {
         Debug.Log("curEvent : " + curEvent);
-        if (events[curEvent].isDead[choice])
+        if (events[curEvent].isDead[choice] || events[curEvent].isEnd)
         {
-            Debug.Log("GameOver!");
+            Debug.Log("GameOver! || isEnd!");
             StartCoroutine(GameOver(choice));
-        }
-        else if (curEvent == eventCount - 1)
-        {
-            // TODO
-            // good end
-            // StartCoroutine(GameEnd());
         }
         else
         {
@@ -73,6 +72,7 @@ public class GameFlowController : MonoBehaviour
             case 2:
                 if (skip)
                 {
+                    audioManager.PlayBGM(1);
                     events[curEvent].StartEvent();
                 }
                 else
@@ -104,21 +104,31 @@ public class GameFlowController : MonoBehaviour
     private IEnumerator StartTransition(IEnumerable<int> soundEffectIndices, bool needTeleport = false)
     {
         anim.SetTrigger(IsGameOverTrigger);
-        while (!anim.GetNextAnimatorStateInfo(0).IsName("GameOver"))
-        {
-            // Debug.Log("IEnumerator StartTransition to state GameOver Yield return null");
-            yield return null;
-        }
+        // while (!anim.GetNextAnimatorStateInfo(0).IsName("GameOver"))
+        // {
+        //     // Debug.Log("IEnumerator StartTransition to state GameOver Yield return null");
+        //     yield return null;
+        // }
 
         anim.SetTrigger(PlayTrigger);
-        
+
         while (!anim.GetNextAnimatorStateInfo(0).IsName("Play"))
         {
-            Debug.Log("IEnumerator StartTransition to state Play Yield return null");
+            // Debug.Log("IEnumerator StartTransition to state Play Yield return null");
             yield return null;
         }
         
-        
+        switch (curEvent)
+        {
+            case 2:
+                audioManager.StopBGM();
+                break;
+            case 8:
+                foods.SetActive(false);
+                break;
+        }
+
+
         if (needTeleport)
         {
             cameraRigGameObject.transform.position = nextScenePosition;
@@ -138,18 +148,49 @@ public class GameFlowController : MonoBehaviour
         {
             yield return null;
         }
+        
+        switch (curEvent)
+        {
+            case 2:
+                audioManager.PlayBGM(1);
+                break;
+            case 4:
+                audioManager.PlayBGM(2);
+                break;
+        }
+
         events[curEvent].StartEvent();
     }
 
     private IEnumerator GameOver(int choice)
     {
         anim.SetTrigger(IsGameOverTrigger);
+        audioManager.StopBGM();
+        if (!events[curEvent].isEnd && choice != 1)
+        {
+            StartCoroutine(audioManager.PlaySoundClipRoutine(audioManager.audioClipGameOver));
+        }
         while (!anim.GetNextAnimatorStateInfo(0).IsName("GameOver"))
         {
             // Debug.Log("IEnumerator StartTransition to state GameOver Yield return null");
             yield return null;
         }
-        TriggerGameOver(choice);
+
+        if (events[curEvent].isEnd)
+        {
+            Debug.Log("EndGame");
+            EndGame(choice);
+        }
+        else
+        {
+            TriggerGameOver(choice);
+        }
+    }
+
+    private void EndGame(int choice)
+    {
+        Debug.Log("Trigger EndGame");
+        events[curEvent].gameOverObjects[choice].GetComponent<DialogueTrigger>().TriggerDialogue(isEnd: true);
     }
 
     public void Play()
@@ -172,14 +213,7 @@ public class GameFlowController : MonoBehaviour
     private void TriggerGameOver(int choice)
     {
         Debug.Log("Trigger GameOver");
-        if (choice == 0)
-        {
-            events[curEvent].gameOverObjects[choice].GetComponent<DialogueTrigger>().TriggerDialogue(isGameOver: true);
-        }
-        else
-        {
-            events[curEvent].gameOverObjects[choice].GetComponent<DialogueTrigger>().TriggerDialogue(isEnd: true);
-        }
+        events[curEvent].gameOverObjects[choice].GetComponent<DialogueTrigger>().TriggerDialogue(isGameOver : true);
     }
 
     public void MakeChoice(GameObject g)
@@ -197,12 +231,21 @@ public class GameFlowController : MonoBehaviour
 
     public void Choose(int optionIdx)
     {
-        events[curEvent].EndEvent(optionIdx);
         Debug.Log("Make Choice (option) " + optionIdx);
+        events[curEvent].EndEvent(optionIdx);
     }
 
     public void RollBack()
     {
+        switch (curEvent)
+        {
+            case 1:
+                audioManager.PlayBGM(0);
+                break;
+            case 8:
+                audioManager.PlayBGM(2);
+                break;
+        }
         StartCoroutine(StartNextEventCoroutine(curEvent == 2));
     }
 }

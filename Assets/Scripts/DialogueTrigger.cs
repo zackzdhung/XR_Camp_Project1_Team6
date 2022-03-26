@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 public class DialogueTrigger : MonoBehaviour
 {
@@ -27,12 +30,16 @@ public class DialogueTrigger : MonoBehaviour
     {
         if (isOption)
         {
+            Debug.Log("TriggerDialogue isOption");
             gameObject.GetComponent<Interactable>().SetUpOptionPanel();
+        }
+        else if (isEnd)
+        {
+            Debug.Log("TriggerDialogue isEnd");
         }
         else
         {
             gameObject.GetComponent<Interactable>().SetUpDialoguePanel();
-
         }
         dialogueManager.StartDialogue(dialogue[curIndex], curIndex, isOption, hasOption, isGameOver, isEnd);
 

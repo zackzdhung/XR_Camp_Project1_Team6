@@ -7,48 +7,43 @@ public class AudioManager : MonoBehaviour
 {
     public AudioClip[] vocals;
     public AudioClip[] soundEffects;
-    // private int curVocal;
-    // private int curSoundEffect;
     private AudioSource audioSource;
     public AudioClip audioClipGameOver;
     
-    // private GameFlowController GameFlowControllerController;
-
+    public AudioSource bgmAudioSource;
+    public AudioClip[] bgms;
+    
     void Start()
     {
-        // curVocal = 0;
-        // curSoundEffect = 1;
         audioSource = gameObject.GetComponent<AudioSource>();
-        // gameFlowController = FindObjectOfType<GameFlowController>();
-    }
-
-    void Update()
-    {
-        
     }
 
     public void PlayVocal(int idx)
     {
         PlaySoundClip(vocals[idx]);
-        // curVocal++;
     }
 
     public void PlaySoundEffect(int idx)
     {
         PlaySoundClip(soundEffects[idx]);
-        // curSoundEffect++;
     }
 
     private void PlaySoundClip(AudioClip audioClip)
     {
         audioSource.clip = audioClip;
         audioSource.Play();
-        // StartCoroutine(PlaySoundClipRoutine(audioClip));
     }
-    public void PlayGameOver()
+
+    public void PlayBGM(int idx)
     {
-        audioSource.clip = audioClipGameOver;
-        audioSource.Play();
+        bgmAudioSource.clip = bgms[idx];
+        bgmAudioSource.loop = true;
+        bgmAudioSource.Play();
+    }
+    
+    public void StopBGM()
+    {
+        bgmAudioSource.Stop();
     }
 
     public IEnumerator PlaySoundClipRoutine(AudioClip audioClip)

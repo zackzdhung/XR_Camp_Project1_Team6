@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.UI;
 using Debug = UnityEngine.Debug;
@@ -44,6 +45,9 @@ public class DialogueManager : MonoBehaviour
     public TextMesh gameOverTitleText;
     public TextMesh gameOverText;
     public TextMesh gameOverHintText;
+    public TextMesh gameOverTitleText2;
+    public TextMesh gameOverText2;
+    public TextMesh gameOverHintText2;
     
     void Start()
     {
@@ -51,7 +55,6 @@ public class DialogueManager : MonoBehaviour
         isInConversation = false;
         playerInput = FindObjectOfType<PlayerInput>();
         dialoguePanel = GameObject.FindWithTag("DialoguePanel");
-        // dialoguePanel.SetActive(false);
         optionPanel = GameObject.FindWithTag("OptionPanel");
         audioManager = FindObjectOfType<AudioManager>();
         isComputerSetSecondEvent = false;
@@ -65,12 +68,18 @@ public class DialogueManager : MonoBehaviour
     {
         isInConversation = true;
         waitForPlayerOptionInput = false;
-        if (isGameOver || isEnd)
+        if (isGameOver)
         {
             Debug.Log("Start GameOver Dialogue");
             gameOverTitleText.gameObject.SetActive(true);
             gameOverTitleText.text = dialogue.name;
             gameOverText.gameObject.SetActive(true);
+        } 
+        else if (isEnd)
+        {
+            gameOverTitleText2.gameObject.SetActive(true);
+            gameOverTitleText2.text = dialogue.name;
+            gameOverText2.gameObject.SetActive(true);
         }
         else if (isOption)
         {
@@ -78,8 +87,10 @@ public class DialogueManager : MonoBehaviour
             optionPanel.SetActive(true);
             optionATitleText.gameObject.SetActive(true);
             optionAText.gameObject.SetActive(true);
+            optionAText.text = "";
             optionBTitleText.gameObject.SetActive(true);
             optionBText.gameObject.SetActive(true);
+            optionBText.text = "";
             optionAnim.SetBool(IsOpen, true);
         }
         else
@@ -157,9 +168,17 @@ public class DialogueManager : MonoBehaviour
     private IEnumerator TypeGameOverMessage(Queue<string> queue, bool isEnd)
     {
         gameOverText.text = "";
+        gameOverText2.text = "";
         foreach (var letter in queue.Dequeue().ToCharArray())
         {
-            gameOverText.text += letter;
+            if (isEnd)
+            {
+                gameOverText2.text += letter;
+            }
+            else
+            {
+                gameOverText.text += letter;
+            }
             yield return null;
         }
         EndDialogue(false, false, true, isEnd);
@@ -167,6 +186,7 @@ public class DialogueManager : MonoBehaviour
 
     private IEnumerator TypeOptions(Queue<string> options)
     {
+        isTyping = true;
         optionAText.text = "";
         foreach (var letter in options.Dequeue().ToCharArray())
         {
@@ -180,6 +200,7 @@ public class DialogueManager : MonoBehaviour
             yield return null;
         }
         waitForPlayerOptionInput = true;
+        isTyping = false;
         if (options.Count != 0) yield break;
         Debug.Log("TypeOptions end dialogue");
         EndDialogue(true, false, false);
@@ -225,6 +246,7 @@ public class DialogueManager : MonoBehaviour
         else if (isSeventhEvent && sentences.Count == 0)
         {
             isSeventhEvent = false;
+            FindObjectOfType<GameFlowController>().foods.SetActive(true);
             yield return StartCoroutine(audioManager.PlaySoundClipRoutine(audioManager.vocals[18]));
         }
         else if (isEighthEvent && sentences.Count == 1)
@@ -237,13 +259,12 @@ public class DialogueManager : MonoBehaviour
     }
 
 
-    private void  EndDialogue(bool isOption, bool hasOption, bool isGameOver, bool isEnd = false)
+    private void EndDialogue(bool isOption, bool hasOption, bool isGameOver, bool isEnd = false)
     {
         if (isEnd)
         {
-            gameOverHintText.text = "Press B to close the Game";
             isInConversation = false;
-            StartCoroutine(playerInput.GameEnd());
+            StartCoroutine(playerInput.WaitGameEnd());
         }
         else if (isGameOver)
         {

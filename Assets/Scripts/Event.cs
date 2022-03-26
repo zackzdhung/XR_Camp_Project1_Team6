@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
+using Debug = UnityEngine.Debug;
 using Outline = XR_1.OutlineEffect.OutlineEffect.Outline;
 
 public class Event : MonoBehaviour
@@ -13,7 +15,7 @@ public class Event : MonoBehaviour
     public bool[] isDead;
     
     public bool isOption;
-    [TextArea]
+    public bool isEnd;
     public String[] options;
 
     public bool[] isSoundEffect0;
@@ -57,6 +59,12 @@ public class Event : MonoBehaviour
 
     public void EndEvent(int c)
     {
+        if (isEnd)
+        {
+            Debug.Log("Final Choice input = " + c);
+            StartCoroutine(PlayAudioSequentially(isSoundEffect0, audioClipIndices0, c));
+            return;
+        }
         if (isOption)
         {
             optionPanel.SetActive(false);

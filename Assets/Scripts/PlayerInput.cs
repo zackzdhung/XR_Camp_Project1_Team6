@@ -70,6 +70,14 @@ public class PlayerInput : MonoBehaviour
 
     private void GetTriggerInput()
     {
+        // Skip Room
+        // if (OVRInput.GetDown(OVRInput.Button.Two))
+        // {
+        //     gameFlowController.curEvent = 3;
+        //     gameFlowController.StartNextEvent(0);
+        //     return;
+        // }
+        
         // VR input
         if (raySelector.target == null|| !raySelector.target.CompareTag("InteractableObject")) return;
         if (!hasNewChoice) return;
@@ -193,7 +201,7 @@ public class PlayerInput : MonoBehaviour
             // if (Input.GetKeyDown(KeyCode.B))
             // {
             //     done = true;
-            //     gameFlowController.Choose(0);
+            //     gameFlowController.RollBack();
             // } 
             // Debug.Log("GetPlayerOptionInput yield return");
             yield return null;
@@ -202,9 +210,9 @@ public class PlayerInput : MonoBehaviour
         gameFlowController.Play();
     }
 
-    public IEnumerator GameEnd()
+    public IEnumerator WaitGameEnd()
     {
-        Debug.Log("RollBack Start");
+        Debug.Log("GameEnd");
         var done = false;
         while (!done)
         {
