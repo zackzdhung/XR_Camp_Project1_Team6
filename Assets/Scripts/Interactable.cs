@@ -8,14 +8,13 @@ using UnityEngine.UI;
 public class Interactable : MonoBehaviour
 {
     public bool selected;
+
     // public string title;
     // public string description;
     private GameObject dialoguePanel;
     private GameObject optionPanel;
     public Vector3 dialoguePanelPosition;
     public Vector3 dialoguePanelRotation;
-    public Vector3 optionPanelPosition;
-    public Vector3 optionPanelRotation;
 
     void Start()
     {

@@ -24,8 +24,8 @@ public class DialogueManager : MonoBehaviour
     private GameObject dialoguePanel;
     public GameObject optionPanel;
 
-    // public TextMesh choiceAText;
-    // public TextMesh choiceBText;
+    public TextMesh optionATitleText;
+    public TextMesh optionBTitleText;
     public TextMesh optionAText;
     public TextMesh optionBText;
 
@@ -40,6 +40,10 @@ public class DialogueManager : MonoBehaviour
     private bool isEighthEvent;
 
     public bool waitForPlayerOptionInput;
+
+    public TextMesh gameOverTitleText;
+    public TextMesh gameOverText;
+    public TextMesh gameOverHintText;
     
     void Start()
     {
@@ -57,15 +61,24 @@ public class DialogueManager : MonoBehaviour
         isTyping = false;
     }
 
-    public void StartDialogue(Dialogue dialogue, int curIdx, bool isOption, bool hasOption)
+    public void StartDialogue(Dialogue dialogue, int curIdx, bool isOption, bool hasOption, bool isGameOver = false, bool isEnd = false)
     {
         isInConversation = true;
         waitForPlayerOptionInput = false;
-        if (isOption)
+        if (isGameOver || isEnd)
+        {
+            Debug.Log("Start GameOver Dialogue");
+            gameOverTitleText.gameObject.SetActive(true);
+            gameOverTitleText.text = dialogue.name;
+            gameOverText.gameObject.SetActive(true);
+        }
+        else if (isOption)
         {
             Debug.Log("Start Option Dialogue");
             optionPanel.SetActive(true);
+            optionATitleText.gameObject.SetActive(true);
             optionAText.gameObject.SetActive(true);
+            optionBTitleText.gameObject.SetActive(true);
             optionBText.gameObject.SetActive(true);
             optionAnim.SetBool(IsOpen, true);
         }
@@ -112,13 +125,18 @@ public class DialogueManager : MonoBehaviour
             sentences.Enqueue(sentence);
         }
 
-        DisplayNextSentence(isOption, hasOption);
+        DisplayNextSentence(isOption, hasOption, isGameOver, isEnd);
     }
-    public void DisplayNextSentence(bool isOption, bool hasOption)
+
+    public void DisplayNextSentence(bool isOption, bool hasOption, bool isGameOver = false, bool isEnd = false)
     {
+        if (isGameOver || isEnd)
+        {
+            if (!waitForPlayerOptionInput) StartCoroutine(TypeGameOverMessage(sentences, isEnd));
+            return;
+        }
         if (isOption)
         {
-            // StopAllCoroutines();
             if (!waitForPlayerOptionInput) StartCoroutine(TypeOptions(sentences));
             return;
         }
@@ -126,7 +144,7 @@ public class DialogueManager : MonoBehaviour
         // choice
         if (sentences.Count == 0)
         {
-            EndDialogue(false, hasOption);
+            EndDialogue(false, hasOption, false);
             return;
         }
 
@@ -134,6 +152,17 @@ public class DialogueManager : MonoBehaviour
 
         StopAllCoroutines();
         StartCoroutine(TypeSentence(sentence));
+    }
+
+    private IEnumerator TypeGameOverMessage(Queue<string> queue, bool isEnd)
+    {
+        gameOverText.text = "";
+        foreach (var letter in queue.Dequeue().ToCharArray())
+        {
+            gameOverText.text += letter;
+            yield return null;
+        }
+        EndDialogue(false, false, true, isEnd);
     }
 
     private IEnumerator TypeOptions(Queue<string> options)
@@ -153,7 +182,7 @@ public class DialogueManager : MonoBehaviour
         waitForPlayerOptionInput = true;
         if (options.Count != 0) yield break;
         Debug.Log("TypeOptions end dialogue");
-        EndDialogue(true, false);
+        EndDialogue(true, false, false);
     }
 
     private IEnumerator TypeSentence(string sentence)
@@ -163,7 +192,8 @@ public class DialogueManager : MonoBehaviour
         foreach (var letter in sentence.ToCharArray())
         {
             dialogueText.text += letter;
-            yield return new WaitForSeconds(0.1f);
+            // yield return new WaitForSeconds(0.1f);
+            yield return null;
         }
         
         if (isComputerSetSecondEvent && sentences.Count == 2)
@@ -183,16 +213,13 @@ public class DialogueManager : MonoBehaviour
             isFifthEvent = false;
             yield return StartCoroutine(audioManager.PlaySoundClipRoutine(audioManager.vocals[15]));
         }
-        else if (isSixthEvent && sentences.Count == 2)
+        else if (isSixthEvent && sentences.Count == 3)
         {
-            isSixthEvent = false;
-            // audioManager.PlayVocal(16);
             yield return StartCoroutine(audioManager.PlaySoundClipRoutine(audioManager.vocals[16]));
         }
         else if (isSixthEvent && sentences.Count == 0)
         {
             isSixthEvent = false;
-            // audioManager.PlayVocal(17);
             yield return StartCoroutine(audioManager.PlaySoundClipRoutine(audioManager.vocals[17]));
         }
         else if (isSeventhEvent && sentences.Count == 0)
@@ -203,17 +230,28 @@ public class DialogueManager : MonoBehaviour
         else if (isEighthEvent && sentences.Count == 1)
         {
             isEighthEvent = false;
-            // audioManager.PlayVocal(19);
             yield return StartCoroutine(audioManager.PlaySoundClipRoutine(audioManager.vocals[19]));
         }
 
         isTyping = false;
     }
-    
 
-    private void EndDialogue(bool isOption, bool hasOption)
+
+    private void  EndDialogue(bool isOption, bool hasOption, bool isGameOver, bool isEnd = false)
     {
-        if (isOption)
+        if (isEnd)
+        {
+            gameOverHintText.text = "Press B to close the Game";
+            isInConversation = false;
+            StartCoroutine(playerInput.GameEnd());
+        }
+        else if (isGameOver)
+        {
+            gameOverHintText.gameObject.SetActive(true);
+            isInConversation = false;
+            StartCoroutine(playerInput.RollBack());
+        }
+        else if (isOption)
         {
             isInConversation = false;
             StartCoroutine(playerInput.MakeChoice(true, hasOption));
@@ -221,25 +259,10 @@ public class DialogueManager : MonoBehaviour
         else
         {
             isInConversation = false;
-            // StartCoroutine(CloseDialoguePanel());
-            // TODO
-            // set inactive after animation finished
             dialogueAnim.SetBool(IsOpen, false);
-            // hintText.gameObject.SetActive(false);
             dialoguePanel.SetActive(false);
             StartCoroutine(playerInput.MakeChoice(false, hasOption));
         }
-        
-    }
 
-    // IEnumerator CloseDialoguePanel()
-    // {
-    //     dialogueAnim.SetBool(IsOpen, false);
-    //     while (dialogueAnim.IsInTransition(0) || dialogueAnim.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f)
-    //     {
-    //         yield return null;
-    //     }
-    //     dialoguePanel.SetActive(false);
-    // }
-    
+    }
 }

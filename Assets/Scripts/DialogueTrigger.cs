@@ -23,7 +23,7 @@ public class DialogueTrigger : MonoBehaviour
         audioSource = gameObject.GetComponent<AudioSource>();
     }
 
-    public void TriggerDialogue(bool isOption = false, bool hasOption = false)
+    public void TriggerDialogue(bool isOption = false, bool hasOption = false, bool isGameOver = false, bool isEnd = false)
     {
         if (isOption)
         {
@@ -34,7 +34,7 @@ public class DialogueTrigger : MonoBehaviour
             gameObject.GetComponent<Interactable>().SetUpDialoguePanel();
 
         }
-        dialogueManager.StartDialogue(dialogue[curIndex], curIndex, isOption, hasOption);
+        dialogueManager.StartDialogue(dialogue[curIndex], curIndex, isOption, hasOption, isGameOver, isEnd);
 
         if (hasSoundEffect)
         {
@@ -42,6 +42,7 @@ public class DialogueTrigger : MonoBehaviour
             hasSoundEffect = false;
         }
 
+        if (isGameOver || isEnd) return;
         curIndex++;
         curIndex = Math.Min(dialogue.Length - 1, curIndex);     
     }

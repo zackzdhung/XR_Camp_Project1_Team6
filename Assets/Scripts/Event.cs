@@ -29,25 +29,20 @@ public class Event : MonoBehaviour
     public GameObject rj;
 
     public GameObject optionPanel;
-    public TextMesh optionA;
-    public TextMesh optionB;
 
     public GameObject optionObject;
+    public GameObject[] gameOverObjects;
 
     public void StartEvent()
     {
         if (isOption)
         {
-            // TODO
             rj.GetComponent<DialogueTrigger>().TriggerDialogue();
-            optionA.text = options[0];
-            optionB.text = options[1];
         }
         else
         {
             foreach (var choice in choices)
             {
-                // choice.tag = "InteractableObject";
                 choice.GetComponent<BoxCollider>().enabled = true;
 
                 foreach (var effect in choice.GetComponentsInChildren<Outline>())
@@ -64,16 +59,13 @@ public class Event : MonoBehaviour
     {
         if (isOption)
         {
-            // TODO
             optionPanel.SetActive(false);
-            
             StartCoroutine(PlayAudioSequentially(isSoundEffect0, audioClipIndices0, c));
         }
         else
         {
             foreach (var choice in choices)
             {
-                // choice.tag = "Untagged";
                 choice.GetComponent<BoxCollider>().enabled = false;
                 foreach (var effect in choice.GetComponentsInChildren<Outline>())
                 {
@@ -91,7 +83,6 @@ public class Event : MonoBehaviour
     {
         foreach (var info in curIsSoundEffect.Zip(curAudioClipsIndices, (b, i) => new {IsSoundeffect = b, Idx = i}))
         {
-            // Debug.Log("isSoundEffect Length = " + cur.Length + " cur = " + isSoundEffect);
             if (info.IsSoundeffect)
             {
                 Debug.Log("Play Sound Effect idx: " + info.Idx);

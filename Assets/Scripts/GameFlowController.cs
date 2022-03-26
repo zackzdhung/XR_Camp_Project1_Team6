@@ -3,11 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine;
+using UnityEngine.UI;
 using Debug = UnityEngine.Debug;
 
 public class GameFlowController : MonoBehaviour
 {
-    public int curEvent { set; get; }
+    public int curEvent { private set; get; }
     // private int curEvent;
     
     public Event[] events;
@@ -29,6 +30,8 @@ public class GameFlowController : MonoBehaviour
     public Vector3 nextScenePosition;
     public Vector3 nextSceneRotation;
 
+    public Image fadeImage;
+
     void Start()
     {
         curEvent = 0;
@@ -46,49 +49,48 @@ public class GameFlowController : MonoBehaviour
         if (events[curEvent].isDead[choice])
         {
             Debug.Log("GameOver!");
-            GameOver();
+            StartCoroutine(GameOver(choice));
+        }
+        else if (curEvent == eventCount - 1)
+        {
+            // TODO
+            // good end
+            // StartCoroutine(GameEnd());
         }
         else
         {
             curEvent++;
-            // TODO check event bound?
             curEvent = Math.Min(eventCount - 1, curEvent);
             Debug.Log("Cur event after math min = " + curEvent);
             StartCoroutine(StartNextEventCoroutine());
         }
     }
-
-    private IEnumerator StartNextEventCoroutine()
+    
+    private IEnumerator StartNextEventCoroutine(bool skip = false)
     {
         switch (curEvent)
         {
-            case 0:
-                break;
-            case 1:
-                break;
             case 2:
-                yield return StartCoroutine(StartTransition(new []{2, 3}));
-                break;
-            case 3:
+                if (skip)
+                {
+                    events[curEvent].StartEvent();
+                }
+                else
+                {
+                    yield return StartCoroutine(StartTransition(new []{2, 3}));
+                }
                 break;
             case 4:
                 yield return StartCoroutine(StartTransition(new []{7}, true));
                 break;
-            case 5:
-                // audioManager.PlayVocal(15);
-                break;
-            case 6:
-                // audioManager.PlayVocal(17);
-                break;
-            case 7:
-                // audioManager.PlayVocal(18);
-                break;
             case 8:
-                yield return StartCoroutine(StartTransition(new[] {8}));
+                yield return StartCoroutine(StartTransition(new[]{8}));
+                break;
+            default:
+                events[curEvent].StartEvent();
                 break;
         }
-        Debug.Log("Start event" + curEvent);
-        events[curEvent].StartEvent();    }
+    }
 
     // private IEnumerator WaitForPlayerInput(int soundEffectIndex, bool)
     // {
@@ -112,9 +114,10 @@ public class GameFlowController : MonoBehaviour
         
         while (!anim.GetNextAnimatorStateInfo(0).IsName("Play"))
         {
-            // Debug.Log("IEnumerator StartTransition to state Play Yield return null");
+            Debug.Log("IEnumerator StartTransition to state Play Yield return null");
             yield return null;
         }
+        
         
         if (needTeleport)
         {
@@ -130,12 +133,53 @@ public class GameFlowController : MonoBehaviour
                 yield return null;
             } while (audioManager.IsPlaying());
         }
+
+        while (fadeImage.color.a != 0)
+        {
+            yield return null;
+        }
+        events[curEvent].StartEvent();
     }
 
-    private void GameOver()
+    private IEnumerator GameOver(int choice)
     {
         anim.SetTrigger(IsGameOverTrigger);
-        // TODO
+        while (!anim.GetNextAnimatorStateInfo(0).IsName("GameOver"))
+        {
+            // Debug.Log("IEnumerator StartTransition to state GameOver Yield return null");
+            yield return null;
+        }
+        TriggerGameOver(choice);
+    }
+
+    public void Play()
+    {
+        anim.SetTrigger(PlayTrigger);
+        dialogueManager.gameOverTitleText.gameObject.SetActive(false);
+        dialogueManager.gameOverText.gameObject.SetActive(false);
+        dialogueManager.gameOverHintText.gameObject.SetActive(false);
+        // StartCoroutine(PlayCoroutine());
+    }
+    // private IEnumerator PlayCoroutine()
+    // {
+    //     anim.SetTrigger(PlayTrigger);
+    //     while (anim.GetCurrentAnimatorStateInfo(0).IsName("GameOver"))
+    //     {
+    //         yield return null;
+    //     }
+    // }
+
+    private void TriggerGameOver(int choice)
+    {
+        Debug.Log("Trigger GameOver");
+        if (choice == 0)
+        {
+            events[curEvent].gameOverObjects[choice].GetComponent<DialogueTrigger>().TriggerDialogue(isGameOver: true);
+        }
+        else
+        {
+            events[curEvent].gameOverObjects[choice].GetComponent<DialogueTrigger>().TriggerDialogue(isEnd: true);
+        }
     }
 
     public void MakeChoice(GameObject g)
@@ -155,5 +199,10 @@ public class GameFlowController : MonoBehaviour
     {
         events[curEvent].EndEvent(optionIdx);
         Debug.Log("Make Choice (option) " + optionIdx);
+    }
+
+    public void RollBack()
+    {
+        StartCoroutine(StartNextEventCoroutine(curEvent == 2));
     }
 }
