@@ -15,6 +15,7 @@ public class DialogueManager : MonoBehaviour
     public TextMesh dialogueText;
     public TextMesh hintText;
     public bool isInConversation;
+    public bool isTyping { get; private set; }
 
     public Animator dialogueAnim;
     public Animator optionAnim;
@@ -32,9 +33,11 @@ public class DialogueManager : MonoBehaviour
 
     private bool isComputerSetSecondEvent;
     
-    private bool isRjFirstEvent;
-    private bool isRjThirdEvent;
-    private bool isRjFifthEvent;
+    private bool isFourthEvent;
+    private bool isFifthEvent;
+    private bool isSixthEvent;
+    private bool isSeventhEvent;
+    private bool isEighthEvent;
 
     public bool waitForPlayerOptionInput;
     
@@ -48,9 +51,10 @@ public class DialogueManager : MonoBehaviour
         optionPanel = GameObject.FindWithTag("OptionPanel");
         audioManager = FindObjectOfType<AudioManager>();
         isComputerSetSecondEvent = false;
-        isRjFirstEvent = false;
-        isRjThirdEvent = false;
+        isFourthEvent = false;
+        isSixthEvent = false;
         waitForPlayerOptionInput = false;
+        isTyping = false;
     }
 
     public void StartDialogue(Dialogue dialogue, int curIdx, bool isOption, bool hasOption)
@@ -82,13 +86,19 @@ public class DialogueManager : MonoBehaviour
                     switch (curIdx)
                     {
                         case 0:
-                            isRjFirstEvent = true;
+                            isFourthEvent = true;
+                            break;
+                        case 1:
+                            isFifthEvent = true;
                             break;
                         case 2:
-                            isRjThirdEvent = true;
+                            isSixthEvent = true;
+                            break;
+                        case 3:
+                            isSeventhEvent = true;
                             break;
                         case 4:
-                            isRjFifthEvent = true;
+                            isEighthEvent = true;
                             break;
                     }
 
@@ -124,37 +134,6 @@ public class DialogueManager : MonoBehaviour
 
         StopAllCoroutines();
         StartCoroutine(TypeSentence(sentence));
-
-        // if (isComputerSetSecondEvent && sentences.Count == 2)
-        // {
-        //     isComputerSetSecondEvent = false;
-        //     audioManager.PlayVocal(2);
-        //     audioManager.PlaySoundEffect(1);
-        // }
-        //
-        // if (isRjFirstEvent && sentences.Count == 1)
-        // {
-        //     isRjFirstEvent = false;
-        //     audioManager.PlayVocal(14);
-        // }
-        //
-        // if (isRjThirdEvent && sentences.Count == 2)
-        // {
-        //     isRjThirdEvent = false;
-        //     audioManager.PlayVocal(16);
-        // }
-        //
-        // // if (isRjThirdEvent && sentences.Count == 0)
-        // // {
-        // //     isRjThirdEvent = false;
-        // //     audioManager.PlayVocal(17);
-        // // }
-        //
-        // if (isRjFifthEvent && sentences.Count == 1)
-        // {
-        //     isRjFifthEvent = false;
-        //     audioManager.PlayVocal(19);
-        // }
     }
 
     private IEnumerator TypeOptions(Queue<string> options)
@@ -179,6 +158,7 @@ public class DialogueManager : MonoBehaviour
 
     private IEnumerator TypeSentence(string sentence)
     {
+        isTyping = true;
         dialogueText.text = "";
         foreach (var letter in sentence.ToCharArray())
         {
@@ -191,35 +171,43 @@ public class DialogueManager : MonoBehaviour
             isComputerSetSecondEvent = false;
             audioManager.PlayVocal(2);
             audioManager.PlaySoundEffect(1);
-        }
-
-        if (isRjFirstEvent && sentences.Count == 1)
+        } 
+        else if (isFourthEvent && sentences.Count == 1)
         {
-            isRjFirstEvent = false;
+            isFourthEvent = false;
             // audioManager.PlayVocal(14);
             yield return StartCoroutine(audioManager.PlaySoundClipRoutine(audioManager.vocals[14]));
         }
-        
-        if (isRjThirdEvent && sentences.Count == 2)
+        else if (isFifthEvent && sentences.Count == 0)
         {
-            isRjThirdEvent = false;
+            isFifthEvent = false;
+            yield return StartCoroutine(audioManager.PlaySoundClipRoutine(audioManager.vocals[15]));
+        }
+        else if (isSixthEvent && sentences.Count == 2)
+        {
+            isSixthEvent = false;
             // audioManager.PlayVocal(16);
             yield return StartCoroutine(audioManager.PlaySoundClipRoutine(audioManager.vocals[16]));
         }
-
-        if (isRjThirdEvent && sentences.Count == 0)
+        else if (isSixthEvent && sentences.Count == 0)
         {
-            isRjThirdEvent = false;
+            isSixthEvent = false;
             // audioManager.PlayVocal(17);
             yield return StartCoroutine(audioManager.PlaySoundClipRoutine(audioManager.vocals[17]));
         }
-        
-        if (isRjFifthEvent && sentences.Count == 1)
+        else if (isSeventhEvent && sentences.Count == 0)
         {
-            isRjFifthEvent = false;
-            // audioManager.PlayVocal(19);
-            yield return StartCoroutine(audioManager.PlaySoundClipRoutine(audioManager.vocals[16]));
+            isSeventhEvent = false;
+            yield return StartCoroutine(audioManager.PlaySoundClipRoutine(audioManager.vocals[18]));
         }
+        else if (isEighthEvent && sentences.Count == 1)
+        {
+            isEighthEvent = false;
+            // audioManager.PlayVocal(19);
+            yield return StartCoroutine(audioManager.PlaySoundClipRoutine(audioManager.vocals[19]));
+        }
+
+        isTyping = false;
     }
     
 

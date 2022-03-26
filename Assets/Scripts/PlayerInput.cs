@@ -65,6 +65,7 @@ public class PlayerInput : MonoBehaviour
 
     private void GetButtonInput()
     {
+        if (dialogueManager.isTyping) return;
         // VR input
         // if (OVRInput.GetDown(OVRInput.Button.One))
         // {

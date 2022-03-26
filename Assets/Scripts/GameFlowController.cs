@@ -55,35 +55,6 @@ public class GameFlowController : MonoBehaviour
             curEvent = Math.Min(eventCount - 1, curEvent);
             Debug.Log("Cur event after math min = " + curEvent);
             StartCoroutine(StartNextEventCoroutine());
-            // switch (curEvent)
-            // {
-            //     case 0:
-            //         break;
-            //     case 1:
-            //         break;
-            //     case 2:
-            //         StartCoroutine(StartTransition(new []{2, 3}));
-            //         break;
-            //     case 3:
-            //         break;
-            //     case 4:
-            //         StartCoroutine(StartTransition(new []{7}, true));
-            //         break;
-            //     case 5:
-            //         audioManager.PlayVocal(15);
-            //         break;
-            //     case 6:
-            //         audioManager.PlayVocal(17);
-            //         break;
-            //     case 7:
-            //         audioManager.PlayVocal(18);
-            //         break;
-            //     case 8:
-            //         StartCoroutine(StartTransition(new[] {8}));
-            //         break;
-            // }
-            // Debug.Log("Start event" + curEvent);
-            // events[curEvent].StartEvent();
         }
     }
 
@@ -104,13 +75,13 @@ public class GameFlowController : MonoBehaviour
                 yield return StartCoroutine(StartTransition(new []{7}, true));
                 break;
             case 5:
-                audioManager.PlayVocal(15);
+                // audioManager.PlayVocal(15);
                 break;
             case 6:
-                audioManager.PlayVocal(17);
+                // audioManager.PlayVocal(17);
                 break;
             case 7:
-                audioManager.PlayVocal(18);
+                // audioManager.PlayVocal(18);
                 break;
             case 8:
                 yield return StartCoroutine(StartTransition(new[] {8}));
