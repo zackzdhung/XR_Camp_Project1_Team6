@@ -1,6 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.UI;
+using Debug = UnityEngine.Debug;
 
 public class PlayerInput : MonoBehaviour
 {
@@ -25,6 +29,7 @@ public class PlayerInput : MonoBehaviour
     public GameObject clock;
     public GameObject couch;
     public GameObject door;
+    private static readonly int IsOpen = Animator.StringToHash("isOpen");
 
 
     void Start()
@@ -38,7 +43,7 @@ public class PlayerInput : MonoBehaviour
 
     void Update()
     {
-        if (dialogueManager.isInConversation)
+        if (dialogueManager.isInConversation && !dialogueManager.waitForPlayerOptionInput && !audioManager.IsPlaying())
         {
             GetButtonInput();
         }
@@ -46,7 +51,7 @@ public class PlayerInput : MonoBehaviour
         // {
         //     GetChoiceInput();
         // }
-        else
+        else if (gameFlowController.curEvent < 4)
         {
             GetTriggerInput();
         }
@@ -70,8 +75,9 @@ public class PlayerInput : MonoBehaviour
         // keyboard testing
         if (Input.GetKeyDown(KeyCode.Space))
         {
+            Debug.Log("Get keycode.space input");
             audioSource.PlayOneShot(buttonSound);
-            dialogueManager.DisplayNextSentence(false);
+            dialogueManager.DisplayNextSentence(false,gameFlowController.curEvent >= 4);
         }
     }
 
@@ -129,11 +135,57 @@ public class PlayerInput : MonoBehaviour
         }
     }
 
-    public void MakeChoice()
+    public IEnumerator MakeChoice(bool isOption, bool hasOption)
     {
-        gameFlowController.MakeChoice(raySelector.target);
-        hasNewChoice = true;
-        raySelector.target.GetComponent<Interactable>().selected = false;
-        raySelector.target = null;
+        if (hasOption)
+        {
+            gameFlowController.TriggerOptions();
+        }
+        else if (isOption)
+        {
+            yield return StartCoroutine(GetPlayerOptionInput());
+        }
+        else
+        {
+            gameFlowController.MakeChoice(raySelector.target);
+            hasNewChoice = true;
+            raySelector.target.GetComponent<Interactable>().selected = false;
+            raySelector.target = null;
+        }
+    }
+
+    private IEnumerator GetPlayerOptionInput()
+    {
+        Debug.Log("GetPlayerOptionInput Start");
+        var done = false;
+        while (!done)
+        {
+            // VR input
+            // if (OVRInput.GetDown(OVRInput.Button.One))
+            // {
+            //     done = true;
+            //     gameFlowController.Choose(0);
+            // } 
+            // else if (OVRInput.GetDown(OVRInput.Button.Two))
+            // {
+            //     done = true;                
+            //     gameFlowController.Choose(0);
+            // }
+            // Keyboard testing
+            if (Input.GetKeyDown(KeyCode.A))
+            {
+                done = true;
+                gameFlowController.Choose(0);
+            } 
+            else if (Input.GetKeyDown(KeyCode.B))
+            {
+                done = true;                
+                gameFlowController.Choose(1);
+            }
+            Debug.Log("GetPlayerOptionInput yield return");
+            yield return null;
+        }
+        dialogueManager.optionAnim.SetBool(IsOpen, false);
+        dialogueManager.optionPanel.SetActive(false);
     }
 }

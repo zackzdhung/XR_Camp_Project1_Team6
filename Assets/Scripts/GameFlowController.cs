@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 public class GameFlowController : MonoBehaviour
 {
@@ -170,5 +172,17 @@ public class GameFlowController : MonoBehaviour
         var choice = g == events[curEvent].choices[0] ? 0 : 1;
         events[curEvent].EndEvent(choice);
         Debug.Log("Make Choice " + choice);
+    }
+
+    public void TriggerOptions()
+    {
+        Debug.Log("Trigger Options");
+        events[curEvent].optionObject.GetComponent<DialogueTrigger>().TriggerDialogue(true);
+    }
+
+    public void Choose(int optionIdx)
+    {
+        events[curEvent].EndEvent(optionIdx);
+        Debug.Log("Make Choice (option) " + optionIdx);
     }
 }

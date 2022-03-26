@@ -1330,6 +1330,7 @@ MonoBehaviour:
   optionPanel: {fileID: 1792781752}
   optionA: {fileID: 365551467}
   optionB: {fileID: 1534632909}
+  optionObject: {fileID: 0}
 --- !u!1 &49548096
 GameObject:
   m_ObjectHideFlags: 0
@@ -4404,6 +4405,7 @@ MonoBehaviour:
   optionPanel: {fileID: 1792781752}
   optionA: {fileID: 365551467}
   optionB: {fileID: 1534632909}
+  optionObject: {fileID: 0}
 --- !u!1 &171525173
 GameObject:
   m_ObjectHideFlags: 0
@@ -5825,6 +5827,7 @@ MonoBehaviour:
   optionPanel: {fileID: 1792781752}
   optionA: {fileID: 365551467}
   optionB: {fileID: 1534632909}
+  optionObject: {fileID: 127709341}
 --- !u!1 &228371087
 GameObject:
   m_ObjectHideFlags: 0
@@ -5949,6 +5952,7 @@ MonoBehaviour:
   optionPanel: {fileID: 1792781752}
   optionA: {fileID: 365551467}
   optionB: {fileID: 1534632909}
+  optionObject: {fileID: 0}
 --- !u!4 &228665872
 Transform:
   m_ObjectHideFlags: 0
@@ -10633,6 +10637,7 @@ MonoBehaviour:
   optionPanel: {fileID: 1792781752}
   optionA: {fileID: 365551467}
   optionB: {fileID: 1534632909}
+  optionObject: {fileID: 0}
 --- !u!1 &389259635
 GameObject:
   m_ObjectHideFlags: 0
@@ -10850,6 +10855,7 @@ MonoBehaviour:
   optionPanel: {fileID: 1792781752}
   optionA: {fileID: 365551467}
   optionB: {fileID: 1534632909}
+  optionObject: {fileID: 1604930262}
 --- !u!1 &416416346
 GameObject:
   m_ObjectHideFlags: 0
@@ -13965,8 +13971,11 @@ MonoBehaviour:
   hintText: {fileID: 971105431}
   isInConversation: 0
   dialogueAnim: {fileID: 1042404686}
+  optionAnim: {fileID: 1792781754}
+  optionPanel: {fileID: 0}
   optionAText: {fileID: 365551467}
   optionBText: {fileID: 1534632909}
+  waitForPlayerOptionInput: 0
 --- !u!4 &553493744
 Transform:
   m_ObjectHideFlags: 0
@@ -21199,6 +21208,7 @@ MonoBehaviour:
   optionPanel: {fileID: 1792781752}
   optionA: {fileID: 365551467}
   optionB: {fileID: 1534632909}
+  optionObject: {fileID: 0}
 --- !u!1 &856076779
 GameObject:
   m_ObjectHideFlags: 0
@@ -21338,6 +21348,7 @@ MonoBehaviour:
   optionPanel: {fileID: 1792781752}
   optionA: {fileID: 365551467}
   optionB: {fileID: 1534632909}
+  optionObject: {fileID: 433205196}
 --- !u!1 &859881048
 GameObject:
   m_ObjectHideFlags: 0
@@ -25921,6 +25932,7 @@ MonoBehaviour:
   optionPanel: {fileID: 1792781752}
   optionA: {fileID: 365551467}
   optionB: {fileID: 1534632909}
+  optionObject: {fileID: 0}
 --- !u!1 &1108088657
 GameObject:
   m_ObjectHideFlags: 0
@@ -27541,6 +27553,7 @@ MonoBehaviour:
   optionPanel: {fileID: 1792781752}
   optionA: {fileID: 365551467}
   optionB: {fileID: 1534632909}
+  optionObject: {fileID: 0}
 --- !u!1 &1163943056
 GameObject:
   m_ObjectHideFlags: 0
@@ -31556,6 +31569,7 @@ MonoBehaviour:
   optionPanel: {fileID: 1792781752}
   optionA: {fileID: 365551467}
   optionB: {fileID: 1534632909}
+  optionObject: {fileID: 0}
 --- !u!1 &1334824683
 GameObject:
   m_ObjectHideFlags: 0
@@ -35488,6 +35502,7 @@ MonoBehaviour:
   optionPanel: {fileID: 1792781752}
   optionA: {fileID: 365551467}
   optionB: {fileID: 1534632909}
+  optionObject: {fileID: 0}
 --- !u!1 &1459719141
 GameObject:
   m_ObjectHideFlags: 0
@@ -36065,6 +36080,7 @@ MonoBehaviour:
   optionPanel: {fileID: 1792781752}
   optionA: {fileID: 365551467}
   optionB: {fileID: 1534632909}
+  optionObject: {fileID: 0}
 --- !u!1 &1488777094
 GameObject:
   m_ObjectHideFlags: 0
@@ -38049,6 +38065,7 @@ MonoBehaviour:
   optionPanel: {fileID: 1792781752}
   optionA: {fileID: 365551467}
   optionB: {fileID: 1534632909}
+  optionObject: {fileID: 424504720}
 --- !u!1 &1573567100
 GameObject:
   m_ObjectHideFlags: 0
@@ -42566,7 +42583,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1792781752}
   m_LocalRotation: {x: -0, y: -0.796576, z: -0, w: 0.6045383}
-  m_LocalPosition: {x: 0.11, y: -2.302, z: -0.054}
+  m_LocalPosition: {x: -0.418, y: -2.302, z: -0.054}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2094632935}
@@ -42998,6 +43015,7 @@ MonoBehaviour:
   optionPanel: {fileID: 1792781752}
   optionA: {fileID: 365551467}
   optionB: {fileID: 1534632909}
+  optionObject: {fileID: 0}
 --- !u!1 &1821700342
 GameObject:
   m_ObjectHideFlags: 0
@@ -43460,6 +43478,7 @@ MonoBehaviour:
   optionPanel: {fileID: 1792781752}
   optionA: {fileID: 365551467}
   optionB: {fileID: 1534632909}
+  optionObject: {fileID: 1037439248}
 --- !u!4 &1847660326
 Transform:
   m_ObjectHideFlags: 0
@@ -45711,6 +45730,7 @@ MonoBehaviour:
   optionPanel: {fileID: 1792781752}
   optionA: {fileID: 365551467}
   optionB: {fileID: 1534632909}
+  optionObject: {fileID: 0}
 --- !u!1 &1949485639
 GameObject:
   m_ObjectHideFlags: 0
@@ -47049,6 +47069,7 @@ MonoBehaviour:
   optionPanel: {fileID: 1792781752}
   optionA: {fileID: 365551467}
   optionB: {fileID: 1534632909}
+  optionObject: {fileID: 0}
 --- !u!1 &2027731725
 GameObject:
   m_ObjectHideFlags: 0

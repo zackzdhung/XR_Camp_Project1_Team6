@@ -51,7 +51,7 @@ public class AudioManager : MonoBehaviour
         audioSource.Play();
     }
 
-    IEnumerator PlaySoundClipRoutine(AudioClip audioClip)
+    public IEnumerator PlaySoundClipRoutine(AudioClip audioClip)
     {
         audioSource.clip = audioClip;
         audioSource.Play();

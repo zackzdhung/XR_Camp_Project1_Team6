@@ -23,7 +23,7 @@ public class DialogueTrigger : MonoBehaviour
         audioSource = gameObject.GetComponent<AudioSource>();
     }
 
-    public void TriggerDialogue(bool isOption = false)
+    public void TriggerDialogue(bool isOption = false, bool hasOption = false)
     {
         if (isOption)
         {
@@ -34,7 +34,7 @@ public class DialogueTrigger : MonoBehaviour
             gameObject.GetComponent<Interactable>().SetUpDialoguePanel();
 
         }
-        dialogueManager.StartDialogue(dialogue[curIndex], curIndex, isOption);
+        dialogueManager.StartDialogue(dialogue[curIndex], curIndex, isOption, hasOption);
 
         if (hasSoundEffect)
         {

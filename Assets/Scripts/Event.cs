@@ -32,6 +32,8 @@ public class Event : MonoBehaviour
     public TextMesh optionA;
     public TextMesh optionB;
 
+    public GameObject optionObject;
+
     public void StartEvent()
     {
         if (isOption)
@@ -64,6 +66,8 @@ public class Event : MonoBehaviour
         {
             // TODO
             optionPanel.SetActive(false);
+            
+            StartCoroutine(PlayAudioSequentially(isSoundEffect0, audioClipIndices0, c));
         }
         else
         {
@@ -76,12 +80,11 @@ public class Event : MonoBehaviour
                     effect.stage = 1;
                 }
             }
-        }
-        
-        var curIsSoundEffect = c == 0 ? isSoundEffect0 : isSoundEffect1;
-        var curAudioClipsIndices = c == 0 ? audioClipIndices0 : audioClipIndices1;
+            var curIsSoundEffect = c == 0 ? isSoundEffect0 : isSoundEffect1;
+            var curAudioClipsIndices = c == 0 ? audioClipIndices0 : audioClipIndices1;
 
-        StartCoroutine(PlayAudioSequentially(curIsSoundEffect, curAudioClipsIndices, c));
+            StartCoroutine(PlayAudioSequentially(curIsSoundEffect, curAudioClipsIndices, c));
+        }
     }
 
     private IEnumerator PlayAudioSequentially(IEnumerable<bool> curIsSoundEffect, IEnumerable<int> curAudioClipsIndices, int choice)
